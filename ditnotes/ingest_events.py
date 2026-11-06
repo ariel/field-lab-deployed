@@ -30,12 +30,29 @@ class RejectedEvent(ValueError):
 def mac_volume_info(path):
     volume=Path(path).resolve(strict=True)
     if volume.is_file():volume=volume.parent
-    while not os.path.ismount(volume):
-        if volume==volume.parent:break
-        volume=volume.parent
-    result = subprocess.run(['/usr/sbin/diskutil', 'info', '-plist', str(volume)],
-                            check=True, capture_output=True, timeout=5)
-    return plistlib.loads(result.stdout)
+    device=volume.stat().st_dev
+    deadline=time.monotonic()+12
+    # APFS Data and firmlink-backed mounts are not reliably recognized by
+    # os.path.ismount(). Ask diskutil about the explicit path first, then walk
+    # ancestors only when it cannot identify that path. Never substitute the
+    # sealed system volume for a Data-volume path merely because it is '/'.
+    for candidate in (volume,*volume.parents):
+        remaining=deadline-time.monotonic()
+        if remaining<=0:break
+        try:
+            result=subprocess.run(['/usr/sbin/diskutil','info','-plist',str(candidate)],
+                                  check=False,capture_output=True,timeout=min(5,remaining))
+            if result.returncode:continue
+            info=plistlib.loads(result.stdout)
+            if not isinstance(info,dict) or any(str(k).lower().startswith('error') and v for k,v in info.items()):continue
+            identity=info.get('VolumeUUID');mount=info.get('MountPoint')
+            if not isinstance(identity,str) or not identity.strip() or not isinstance(mount,str) or not mount.startswith('/'):continue
+            mounted=Path(mount).resolve(strict=True)
+            if not mounted.is_dir() or mounted.stat().st_dev!=device:continue
+            return info
+        except (OSError,ValueError,TypeError,plistlib.InvalidFileException,subprocess.SubprocessError):
+            continue
+    raise RuntimeError('Cannot determine the mounted volume for '+str(volume)+' within the diskutil query budget')
 
 def _required(event, key):
     value = event.get(PREFIX + key)
