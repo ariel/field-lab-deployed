@@ -26,7 +26,7 @@ bash deploy/bootstrap.sh doctor
 bash deploy/bootstrap.sh start
 ```
 
-`--offshoot-idle` records a check you have actually made in OffShoot; it does not detect running transfers. Do not supply it while copying or merely because a timeout expired. Configuration backs up affected OffShoot settings and changes its destinations. Review the planned destination first. Service startup is separate so settings can be reviewed before processing.
+`--offshoot-idle` records a check you have actually made in OffShoot; it does not detect running transfers. Do not supply it while copying or merely because a timeout expired. Configuration backs up affected OffShoot settings and changes its destinations. Review the planned destination first. `verify-offshoot` reads back preferences, active preset and hook files; selected disk dropzones still need visible confirmation and a disposable verified transfer. Service startup is separate so settings can be reviewed before processing.
 
 For updates, fetch/check out the maintainer's stated tag or commit in the source checkout, preserving local changes, then:
 

@@ -7,7 +7,9 @@ def inspect(root):
     info=plistlib.loads(Path('/Applications/OffShoot.app/Contents/Info.plist').read_bytes())
     export=subprocess.run(['/usr/bin/defaults','export',info['CFBundleIdentifier'],'-'],capture_output=True,check=True)
     defaults=plistlib.loads(Path('/Applications/OffShoot.app/Contents/Resources/SFIDefaults.plist').read_bytes())
-    actual={**defaults,**plistlib.loads(export.stdout)};mismatches=[]
+    overrides=plistlib.loads(export.stdout)
+    if not isinstance(defaults,dict) or not isinstance(overrides,dict):raise ValueError('Preference export must be a mapping')
+    actual={**defaults,**overrides};mismatches=[]
     for key,expected in receipt['hooks'].items():
         value=actual.get(key)
         if key=='SFIDefaultsDestinationDirectoryFormatIncrementer':
@@ -21,7 +23,10 @@ def inspect(root):
     config=json.loads((root/'config.json').read_text())
     pattern=config['ingest_folder'].rstrip('/')+'/{YYYY}{MM}{DD}/{Source Name}-{Counter}'
     current_preset_ok=actual.get('SFIDefaultsCurrentOrganizePreset')=='Verified Ingest'
-    preset_ok=bool(presets and presets[0].get('folderPattern')==pattern and not presets[0].get('flattenFolders') and not presets[0].get('renamePattern'))
+    item=presets[0] if isinstance(presets,list) and len(presets)==1 and isinstance(presets[0],dict) else {}
+    try:counter_ok=int(item.get('counter'))>=int(receipt['counter'])
+    except (ValueError,TypeError,KeyError):counter_ok=False
+    preset_ok=bool(item.get('folderPattern')==pattern and item.get('flattenFolders') is False and not item.get('renamePattern') and item.get('ignoreEmptyFolders') is False and not item.get('doNotCopyFiles') and not item.get('copyOnlyFiles') and not any(item.get('ignoreBundles',[])) and counter_ok)
     hooks_ok=all(Path(receipt['hooks'][key]).is_file() for key in ['SFIDefaultsHedgeStartedScript','SFIDefaultsFileCopyCompletedScript'])
     return {'preferences_match':not mismatches,'mismatches':mismatches,'preset_matches':preset_ok,'hook_files_present':hooks_ok,'active_preset_matches':current_preset_ok,'settings_verified':not mismatches and preset_ok and hooks_ok and current_preset_ok,'destination_validation':'The URL API does not expose selected dropzones; confirm the actual destination preview and a disposable verified transfer','ccc_changed':False}
 if __name__=='__main__':

@@ -69,6 +69,9 @@ class Playtest:
             target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,target)
             assert digest(source)==digest(target)
     def deploy(self,label,source):
+        self.run(label+'-git-init',['git','init',source])
+        self.run(label+'-git-add',['git','-C',source,'add','--all'])
+        self.run(label+'-git-commit',['git','-C',source,'-c','user.name=Field Lab playtest','-c','user.email=playtest@localhost','commit','-m','Disposable '+label+' source snapshot'])
         candidate=self.manager.stage(source,self.home);release=Path(candidate['release']);self.seed(release)
         info=self.run(label+'-prepare',[sys.executable,source/'deploy/field.py','install' if label=='A' else 'update','--source',source,'--home',self.home])
         info['activate']=self.run(label+'-activate',[sys.executable,source/'deploy/field.py','activate','--home',self.home,'--release',release.name,'--offshoot-idle'])

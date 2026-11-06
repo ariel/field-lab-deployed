@@ -6,6 +6,7 @@ Use the pinned bootstrap to prepare a disposable installation. Tests create temp
 
 ```sh
 /path/to/prepared/release/.venv/bin/python -m unittest discover -s tests -v
+npm ci --prefix search
 cd viewer
 npm ci
 npm test

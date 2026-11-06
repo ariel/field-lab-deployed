@@ -231,4 +231,3 @@ class Snapshots:
         return {'project':{'id':'waiting-for-ingest','name':'Ingests','updated_at':'initial'},'assets':[]}
     def vectors(self):
         pair=self.pair();return pair['vectors'] if pair else {'revision':{},'vectors':[]}
-
