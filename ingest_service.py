@@ -208,15 +208,28 @@ def run():
     try:server.serve_forever(poll_interval=.25)
     finally:
         stop.set()
-        server.server_close();worker.join(timeout=2)
-        with connect(c) as db:db.execute('PRAGMA wal_checkpoint(TRUNCATE)')
-        atomic_json(ROOT/'runtime/stopped.json',{'stopped_at':time.time()})
+        # Keep service.lock until every AI writer and its executors have stopped.
+        # The stop command bounds this wait and kills this process group if needed.
+        try:
+            worker.join();server.server_close()
+            with connect(c) as db:db.execute('PRAGMA wal_checkpoint(TRUNCATE)')
+            atomic_json(ROOT/'runtime/stopped.json',{'stopped_at':time.time()})
+        finally:lock.close()
+
+def _stopped_or_unknown():
+    """Missing/stale PID evidence must not override a live service lock."""
+    try:
+        with (ROOT/'runtime/service.lock').open('a+') as lock:
+            try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            except BlockingIOError:raise RuntimeError('AI service lock is held but its PID cannot be verified; status is unknown, not stopped') from None
+    except FileNotFoundError:pass
+    return {'status':'stopped'}
 
 def stop_service():
     try:state=json.loads((ROOT/'runtime/service.json').read_text());pid=int(state['pid'])
-    except (OSError,ValueError):return {'status':'stopped'}
+    except (OSError,ValueError):return _stopped_or_unknown()
     check=subprocess.run(['/bin/ps','-p',str(pid),'-o','command='],capture_output=True,text=True)
-    if str(ROOT) not in check.stdout or 'ingest_service.py run' not in check.stdout:return {'status':'stopped'}
+    if str(ROOT) not in check.stdout or 'ingest_service.py run' not in check.stdout:return _stopped_or_unknown()
     os.killpg(pid,signal.SIGTERM)
     deadline=time.monotonic()+8
     while time.monotonic()<deadline:
@@ -226,7 +239,13 @@ def stop_service():
         time.sleep(.1)
     try:os.killpg(pid,signal.SIGKILL)
     except ProcessLookupError:pass
-    return {'status':'stopped','incomplete_work':'will resume at next start'}
+    deadline=time.monotonic()+5
+    while time.monotonic()<deadline:
+        with (ROOT/'runtime/service.lock').open('a+') as lock:
+            try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);return {'status':'stopped','incomplete_work':'will resume at next start'}
+            except BlockingIOError:pass
+        time.sleep(.05)
+    raise RuntimeError('AI service still owns its lock after termination; refusing to report stopped')
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('command',choices=['start','run','stop','event','reconcile','recover']);parser.add_argument('payload',nargs='?');a=parser.parse_args()

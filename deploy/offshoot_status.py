@@ -1,5 +1,5 @@
 """Read back OffShoot settings after supported API configuration; no app mutations."""
-import json,plistlib,subprocess
+import json,plistlib,subprocess,sys
 from pathlib import Path
 
 def inspect(root):
@@ -30,4 +30,7 @@ def inspect(root):
     hooks_ok=all(Path(receipt['hooks'][key]).is_file() for key in ['SFIDefaultsHedgeStartedScript','SFIDefaultsFileCopyCompletedScript'])
     return {'preferences_match':not mismatches,'mismatches':mismatches,'preset_matches':preset_ok,'hook_files_present':hooks_ok,'active_preset_matches':current_preset_ok,'settings_verified':not mismatches and preset_ok and hooks_ok and current_preset_ok,'destination_validation':'The URL API does not expose selected dropzones; confirm the actual destination preview and a disposable verified transfer','ccc_changed':False}
 if __name__=='__main__':
-    result=inspect(Path(__file__).resolve().parents[1]);print(json.dumps(result,indent=2));raise SystemExit(0 if result['settings_verified'] else 1)
+    try:
+        result=inspect(Path(__file__).resolve().parents[1]);print(json.dumps(result,indent=2));raise SystemExit(0 if result['settings_verified'] else 1)
+    except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as error:
+        print(json.dumps({'settings_verified':False,'changes_made':False,'error':str(error)}),file=sys.stderr);raise SystemExit(1)

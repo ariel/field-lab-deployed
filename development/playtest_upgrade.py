@@ -34,9 +34,12 @@ class Playtest:
         self.project=self.home.parent/(self.home.name+'-project');self.logs=self.home.parent/(self.home.name+'-evidence')
         self.sources=self.home.parent/(self.home.name+'-sources')
         for path in [self.logs,self.sources]:path.mkdir(parents=True,exist_ok=True)
-        if self.project.exists() or (self.home/'current').exists():raise RuntimeError('Use a new disposable --home; existing project/current is not overwritten')
+        if not args.continue_final and (self.project.exists() or (self.home/'current').exists()):raise RuntimeError('Use a new disposable --home; existing project/current is not overwritten')
         self.manager=module(self.source/'deploy/manager.py','playtest_manager')
         self.report={'home':str(self.home),'project':str(self.project),'started_at':time.time(),'stages':{},'optimizations':['Immutable SHA-verified model assets seeded from a prior local fixture','Previously source-built FFmpeg reused after SHA comparison; fresh venv/npm/native builds per release','No originals or live host apps/settings touched']}
+        if args.continue_final:
+            self.report=json.loads((self.logs/'report.json').read_text())
+            if not self.report.get('ready') or 'C' not in self.report['stages']:raise RuntimeError('A/B/C playtest must complete successfully before final continuation')
         self.env=dict(os.environ,FIELD_LAB_CACHE=str(args.cache.resolve()))
     def note(self,text):print(text,flush=True)
     def save(self):
@@ -68,10 +71,11 @@ class Playtest:
             source=self.fixture/'tools/ffmpeg/bin'/name;target=release/'tools/ffmpeg/bin'/name
             target.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,target)
             assert digest(source)==digest(target)
-    def deploy(self,label,source):
-        self.run(label+'-git-init',['git','init',source])
-        self.run(label+'-git-add',['git','-C',source,'add','--all'])
-        self.run(label+'-git-commit',['git','-C',source,'-c','user.name=Field Lab playtest','-c','user.email=playtest@localhost','commit','-m','Disposable '+label+' source snapshot'])
+    def deploy(self,label,source,commit=True):
+        if commit:
+            self.run(label+'-git-init',['git','init',source])
+            self.run(label+'-git-add',['git','-C',source,'add','--all'])
+            self.run(label+'-git-commit',['git','-C',source,'-c','user.name=Field Lab playtest','-c','user.email=playtest@localhost','commit','-m','Disposable '+label+' source snapshot'])
         candidate=self.manager.stage(source,self.home);release=Path(candidate['release']);self.seed(release)
         info=self.run(label+'-prepare',[sys.executable,source/'deploy/field.py','install' if label=='A' else 'update','--source',source,'--home',self.home])
         info['activate']=self.run(label+'-activate',[sys.executable,source/'deploy/field.py','activate','--home',self.home,'--release',release.name,'--offshoot-idle'])
@@ -111,6 +115,62 @@ with connect(config()) as db:
         # Top-level list is parsed separately because log JSON helper collects objects.
         return json.loads(Path(info['log']).read_text().strip())
     def media_hashes(self):return {p.name:digest(p) for p in sorted((self.project/'media').glob('*.mp4'))}
+    def caption_changes(self,profile_a,profile_b):
+        changes=[]
+        for path in (self.project/'_DIT_NOTES/.objects').glob('*'):
+            a=path/profile_a/'result.json';b=path/profile_b/'result.json'
+            if not a.is_file() or not b.is_file():continue
+            left=json.loads(a.read_text());right=json.loads(b.read_text())
+            other={round(x['seconds'],4):x['label'] for x in right['highlights']}
+            for value in left['highlights']:
+                label=other.get(round(value['seconds'],4))
+                if label is not None and label!=value['label']:
+                    changes.append({'content_id':path.name,'seconds':value['seconds'],'before':value['label'],'after':label})
+        return changes[:8]
+    def http_ui(self,release,label):
+        server_log=(self.logs/(label+'-server.log')).open('w')
+        server=subprocess.Popen([str(release/'.venv/bin/python'),str(release/'dit_notes.py'),'serve',str(self.project),'--port',str(self.args.port)],stdout=server_log,stderr=subprocess.STDOUT,env=self.env,start_new_session=True)
+        base='http://127.0.0.1:'+str(self.args.port);deadline=time.monotonic()+60
+        while True:
+            try:
+                with urllib.request.urlopen(base+'/',timeout=3) as response:html=response.read().decode()
+                break
+            except Exception:
+                if server.poll() is not None or time.monotonic()>deadline:raise RuntimeError(label+' UI did not start')
+                time.sleep(.2)
+        script=re.search(r'<script[^>]+src="([^"]+)"',html).group(1)
+        with urllib.request.urlopen(base+script,timeout=5) as response:bundle=response.read()
+        with urllib.request.urlopen(base+'/api/catalog',timeout=10) as response:catalog=json.load(response)
+        assert len(catalog['assets'])==2,catalog
+        assert all(asset['status']=='ready' for asset in catalog['assets'])
+        return {'url':base,'pid':server.pid,'release':str(release),'new_bundle':script,'served_bundle_sha256':hashlib.sha256(bundle).hexdigest(),'catalog_assets':len(catalog['assets'])}
+    def finalize(self):
+        original_hash=digest(self.args.trailer);assert original_hash==self.report['source_hash_before']
+        current=(self.home/'current').resolve();metadata=self.metadata(current);queues=self.queues(current);media=self.media_hashes()
+        self.report['caption_changes_A_to_B']=self.caption_changes(self.report['plan_A']['profile'],self.report['plan_C']['profile'])
+        sourceD=self.sources/'D'
+        self.run('D-git-clone',['git','clone','--no-hardlinks',self.source,sourceD])
+        source_commit=subprocess.check_output(['git','-C',self.source,'rev-parse','HEAD'],text=True).strip()
+        assert subprocess.check_output(['git','-C',sourceD,'rev-parse','HEAD'],text=True).strip()==source_commit
+        self.report['final_source_git_commit']=source_commit
+        d=self.deploy('D',sourceD,commit=False);planD=self.plan(d)
+        self.report['plan_D']=planD
+        run=self.run('D-reindex',[sys.executable,sourceD/'deploy/field.py','reindex','--home',self.home,'--project',self.project,'--run','--offshoot-idle'])
+        result=next(x for x in run['json'] if 'counts' in x)
+        assert result['counts']['failed']==0 and result['remaining']==0,result
+        assert result['counts']['processed']==planD['analyze'] and result['counts']['reused']==planD['reuse'],result
+        assert self.metadata(d)==metadata;assert self.queues(d)==queues;assert self.media_hashes()==media;assert digest(self.args.trailer)==original_hash
+        self.manager.verify_bootstrap(d);self.manager.verify_source(d)
+        old=self.report['ui'];command=subprocess.check_output(['/bin/ps','-p',str(old['pid']),'-o','command='],text=True)
+        if str(self.project) not in command or 'dit_notes.py serve' not in command:raise RuntimeError('Refusing to stop an unexpected UI process')
+        os.killpg(old['pid'],signal.SIGTERM)
+        for _ in range(100):
+            try:
+                with socket.create_connection(('127.0.0.1',self.args.port),timeout=.1):pass
+            except OSError:break
+            time.sleep(.05)
+        self.report.update(ui_previous_C=old,ui=self.http_ui(d,'D'),D_reindex=result,final_ready=True,final_finished_at=time.time(),final_metadata_preserved=True,final_queue_preserved=True,final_media_hashes_unchanged=True)
+        self.save();self.note(json.dumps({'final_ready':True,'report':str(self.logs/'report.json'),'ui':self.report['ui']['url']},indent=2))
     def main(self):
         original_hash=digest(self.args.trailer);self.project.mkdir(parents=True);(self.project/'media').mkdir()
         ffmpeg=self.fixture/'bin/ffmpeg'
@@ -144,7 +204,7 @@ with connect(config()) as db:
         self.report['B_interrupted']={'exit_code':child.returncode,'first_objects':[str(x) for x in first],'plan_after_interrupt':partial,'log':str(log)}
         resumed=self.run('B-resume',[sys.executable,sourceB/'deploy/field.py','reindex','--home',self.home,'--project',self.project,'--run','--offshoot-idle'])
         resume=next(x for x in resumed['json'] if 'counts' in x);assert resume['counts']['reused']==1 and resume['counts']['processed']==1 and resume['remaining']==0,resume
-        self.report['B_resumed']=resume;assert self.metadata(b)==metadata;assert self.queues(b)==queues;assert self.media_hashes()==media;self.save()
+        self.report['B_resumed']=resume;self.report['caption_changes_A_to_B']=self.caption_changes(planA['profile'],planB['profile']);assert self.metadata(b)==metadata;assert self.queues(b)==queues;assert self.media_hashes()==media;self.save()
         sourceC=self.snapshot('C',sourceB);jsx=sourceC/'viewer/src/main.jsx';text=jsx.read_text();assert '>Images</button>' in text;jsx.write_text(text.replace('>Images</button>','>Stills</button>',1))
         c=self.deploy('C',sourceC);planC=self.plan(c);assert planC['profile']==planB['profile'] and planC['analyze']==0 and planC['reuse']==2,planC
         before_seals={str(p.relative_to(self.project)):digest(p) for p in (self.project/'_DIT_NOTES/.objects').glob('*/*/complete.json')}
@@ -174,8 +234,10 @@ with connect(config()) as db:
 
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--source',type=Path,default=Path(__file__).resolve().parents[1]);parser.add_argument('--fixture',type=Path,required=True);parser.add_argument('--media','--trailer',dest='trailer',type=Path,required=True);parser.add_argument('--home',type=Path,default=Path('/tmp/field-lab-upgrade-playtest'));parser.add_argument('--cache',type=Path,default=Path.home()/'Library/Caches/Field Lab');parser.add_argument('--port',type=int,default=18796)
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--source',type=Path,default=Path(__file__).resolve().parents[1]);parser.add_argument('--fixture',type=Path,required=True);parser.add_argument('--media','--trailer',dest='trailer',type=Path,required=True);parser.add_argument('--home',type=Path,default=Path('/tmp/field-lab-upgrade-playtest'));parser.add_argument('--cache',type=Path,default=Path.home()/'Library/Caches/Field Lab');parser.add_argument('--port',type=int,default=18796);parser.add_argument('--continue-final',action='store_true',help='After successful A/B/C, deploy current --source as final D and verify real reindex again')
     args=parser.parse_args();test=Playtest(args)
-    try:test.main()
+    try:
+        if args.continue_final:test.finalize()
+        else:test.main()
     except BaseException as error:test.report.update(ready=False,error=repr(error));test.save();raise
 if __name__=='__main__':main()

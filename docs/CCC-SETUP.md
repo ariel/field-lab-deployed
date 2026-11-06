@@ -52,3 +52,5 @@ Keep the task manually started initially. A generic “volume connected” sched
 6. Once the disposable test passes, create/confirm the actual project task, Preview it and perform a real small ingest → AI → clean stop → CCC → verification sequence. Restart AI afterward. Independently restore/open a sample before declaring the machine accepted.
 
 A fully unattended “install on any Mac” guarantee is not possible from development tests alone. Actual app activation, permissions, supported macOS/runtime, two known physical disks, visible UI state and a successful physical ingest/restore test are recipient-machine acceptance conditions. The prompts are designed to stop with a precise unresolved step instead of asserting success.
+
+If Codex does not have a native app-control capability or the necessary macOS permission on this laptop, it can prepare the exact task specification and read-only checks but needs the operator to make the supported CCC UI selections. Do not replace that missing capability with undocumented file edits or assume that installing Codex grants Accessibility permission.

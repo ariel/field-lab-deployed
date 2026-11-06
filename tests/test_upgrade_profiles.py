@@ -67,6 +67,12 @@ class UpgradeProfiles(unittest.TestCase):
     def test_sampling_changes_invalidate_but_equivalent_defaults_do_not(self):
         self.assertEqual(self.profile(),self.profile(interval=2.0,max_frames=12.0,timeout=300.0,vision_width=960))
         self.assertNotEqual(self.profile(),self.profile(max_frames=16))
+    def test_python_dependencies_and_decoder_changes_invalidate_analysis(self):
+        first=self.profile();(self.release/'requirements.lock.txt').write_text('mlx==0.30.0\n')
+        second=self.profile();self.assertNotEqual(first,second)
+        for runtime in ('python','ffmpeg'):
+            self.lock[runtime]={'sha256':'a'*64};self.save_lock()
+            changed=self.profile();self.assertNotEqual(second,changed);second=changed
     def test_interrupted_upgrade_reuses_completed_new_profile_and_keeps_operator_edits(self):
         project=self.base/'production';scope=project/'20261105/A-CAM-001';scope.mkdir(parents=True)
         for i in range(3):(scope/f'clip-{i}.mp4').write_bytes(f'original media {i}'.encode())

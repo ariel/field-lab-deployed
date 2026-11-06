@@ -79,6 +79,13 @@ def profile_id(models_root=None,options=None):
         # use. Pin the inference assets, not download timestamps, release paths,
         # browser runtime or search-only models. A UI update can reuse AI output.
         lock=_read(lock_path,{})
+        # Python libraries and decoding can alter the same inference recipe even
+        # when model weights and prompts are unchanged. Keep this conservative;
+        # Node/browser/search asset versions remain outside the analysis key.
+        requirements=ROOT/'requirements.lock.txt'
+        evidence['runtime/requirements.lock.txt']=_sha(requirements) if requirements.is_file() else 'missing'
+        for runtime in ('python','ffmpeg'):
+            evidence['runtime/'+runtime]=lock.get(runtime,{}).get('sha256','missing')
         analysis_models={'parakeet','Qwen3.5-4B-4bit','diarization','speaker','faces'}
         for row in lock['model_files']:
             relative=Path(row['path'])

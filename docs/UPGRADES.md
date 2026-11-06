@@ -8,12 +8,13 @@ A deployment release ID identifies the entire installed software tree. An **anal
 | Browser runtime, Node, text/CLIP search models or reranker | Reuse | Prepare assets and refresh the search index when needed |
 | `ditnotes/prompts/field-caption.txt` or inference code in `engine.py` | New profile | Reanalyze selected registered scopes, then publish search |
 | ASR/VLM/diarization/speaker/face model weights, configs or identity model manifests | New profile | Reanalyze selected registered scopes, then publish search |
+| Python dependency lock, Python runtime or FFmpeg decoder source pin | New profile | Reanalyze selected registered scopes; this deliberately treats any Python lock change conservatively |
 | Sampling options, such as maximum selected frames | New profile | Reanalyze the requested scopes with those options |
 | File move or a second download of identical pinned weights | Reuse | Reconcile the file paths; retain content identities |
 
 Managed releases use the pinned SHA256 values for inference models. Their modification times and model-generation directory names do not affect analysis reuse. Changing a browser-only asset can create a new model generation for deployment while retaining the same analysis profile. Bootstrap verifies the actual model files against those pins; the profile calculation uses those verified pins without rereading gigabytes of weights for every planning call. Do not manually change installed models or edit an active release. Legacy standalone prototypes without a deployment lock retain their older conservative mtime-based rule.
 
-An analysis profile does not promise that every Python dependency or future algorithm has been modeled automatically. When changing inference behavior, the maintainer must update a tracked analysis input or explicitly version the profile. Keep release notes clear about whether an upgrade changes analysis, search, database compatibility or presentation.
+The entire Python dependency lock, pinned Python runtime and FFmpeg decoder source are included conservatively. Even a Python dependency used only by chat can therefore invalidate analysis when that lock changes. Node, browser and React changes remain separate. When changing other inference behavior, the maintainer must update a tracked analysis input or explicitly version the profile. Keep release notes clear about whether an upgrade changes analysis, search, database compatibility or presentation.
 
 ## Maintainer workflow
 

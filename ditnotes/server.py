@@ -138,7 +138,7 @@ def _byte_range(value: str | None, size: int):
 
 
 class _ProjectServer(ThreadingHTTPServer):
-    daemon_threads = True
+    daemon_threads = False
     allow_reuse_address = True
 
     def __init__(self, project: Path, port: int, tool_root: Path):
@@ -166,10 +166,13 @@ class _ProjectServer(ThreadingHTTPServer):
         return self.project/rel
 
     def server_close(self):
+        # Drain request handlers before closing the executors they can submit to.
+        # The daemon stop command bounds the whole shutdown and can terminate its
+        # process group; service.lock remains held until all writers are done.
+        super().server_close()
         if hasattr(self,'chat'):self.chat.close()
         if hasattr(self,'metadata'):self.metadata.close()
-        self.search_backend.close()
-        super().server_close()
+        if hasattr(self,'search_backend'):self.search_backend.close()
 
 
 class _Handler(BaseHTTPRequestHandler):

@@ -10,7 +10,7 @@ class MetadataAPI:
   self.server=server;self.stop=threading.Event();self.changed=threading.Event();self.error=None
   self.thread=threading.Thread(target=self._loop,name='annotation-index',daemon=True);self.thread.start()
   if (server.project/'_DIT_NOTES/project.sqlite3').is_file():self.changed.set()
- def close(self):self.stop.set();self.changed.set();self.thread.join(timeout=2)
+ def close(self):self.stop.set();self.changed.set();self.thread.join()
  def store(self,catalog=None):
   catalog=self.server.catalog.read() if catalog is None else catalog
   identity=catalog.get('project',{}).get('id')
