@@ -13,6 +13,7 @@ jobs:
       - run: python -m unittest discover -s tests -p 'test_deploy.py' -v
       - run: python -m unittest discover -s tests -p 'test_bootstrap.py' -v
       - run: python -m unittest discover -s tests -p 'test_field.py' -v
+      - run: python -m unittest discover -s tests -p 'test_source_distribution.py' -v
   viewer:
     runs-on: ubuntu-latest
     steps:
@@ -30,3 +31,11 @@ jobs:
         working-directory: viewer
       - run: npm run build
         working-directory: viewer
+  native:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift build --jobs 2
+        working-directory: native-progress
+      - run: swift test --jobs 2
+        working-directory: native-progress
