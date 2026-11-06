@@ -1,0 +1,28 @@
+# Desktop apps
+
+After activating and configuring Field Lab, install its four local Desktop apps:
+
+```sh
+bash deploy/bootstrap.sh desktop
+```
+
+Use `--home "/your/application/home"` consistently for a nondefault installation. `--desktop "/chosen/existing/folder"` installs the shortcuts elsewhere; the folder must exist and be outside the application home. This command builds the apps locally and installs shortcuts. It does not open OffShoot, start a transfer, run AI or touch CCC during installation.
+
+Double-click an app in Finder:
+
+| App | Action |
+| --- | --- |
+| **Field Lab Ingest** | Checks the configured destination is mounted, opens OffShoot and starts/resumes AI processing. Select the card and review the destination/preset before adding transfers in OffShoot. |
+| **Field Lab Library** | Starts/resumes AI, waits for the local library endpoint and opens it in the default browser. |
+| **Field Lab AI Progress** | Starts/resumes AI and opens the native progress window. |
+| **Field Lab Stop AI** | Stops AI safely; pending work reconciles on the next start. It does not stop OffShoot or CCC. |
+
+The apps use native AppleScript applets and native failure alerts. They do not open Terminal. Icons are obtained from the Mac's installed system resources; no OffShoot icon or proprietary application binary is redistributed. They are compiled and ad hoc signed on the recipient Mac, not shipped as notarized downloadable applications.
+
+Each shortcut points to a managed app generation under `shared/runtime/desktop-apps`. The app calls the stable application `run` launcher, which resolves the currently active release. Updating Field Lab does not require changing the shortcut's executable paths. Running `desktop` again refreshes managed app generations and restores a missing shortcut. Older generations are retained; no application cleanup is performed automatically.
+
+The installer refuses to replace an existing unrelated file, app or symlink with one of these names. It checks all four names before publishing. Rename the conflicting unrelated item yourself or choose another shortcut folder; do not delete user content to force installation. Ownership records are persisted before shortcuts are created so an interrupted installation can resume safely.
+
+A missing drive or service startup error produces a native alert. Reconnect the configured destination and retry, or inspect AI Progress/status with Codex. Opening Ingest does not call Add Transfers, reset preferences, automatically select a source card or authorize card erasure. CCC remains a separately configured/validated task.
+
+Development tests compile, sign, verify and decompile all four real app bundles in a temporary Desktop folder, including a home path with spaces, Unicode, quotes and shell characters. They also cover ownership conflicts, interruption/retry, release switching and dispatcher behavior with mocked apps. They never launch those applets or change the actual Desktop. The first-install acceptance still needs a real double-click test on the recipient Mac.

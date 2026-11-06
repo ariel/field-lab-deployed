@@ -9,6 +9,7 @@ Field Lab: bash deploy/bootstrap.sh COMMAND [OPTIONS]
   configure --volume MOUNT [--ingest-folder Ingests] [--port 8766]
   configure-offshoot --offshoot-idle | verify-offshoot | ccc-status
   reindex --project PROJECT [--run --offshoot-idle]
+  desktop [--desktop PATH]
   status | doctor | start | stop | reconcile | rollback --offshoot-idle
 Every command accepts --home PATH. Default: ~/Library/Application Support/Field Lab.
 Install/update prepare only unless --activate is explicitly supplied.

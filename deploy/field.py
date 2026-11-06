@@ -98,11 +98,12 @@ def doctor(home):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='command',required=True)
-    for name in ['install','update','activate','rollback','status','doctor','configure','configure-offshoot','start','stop','reconcile','ccc-status','reindex','verify-offshoot']:
+    for name in ['install','update','activate','rollback','status','doctor','configure','configure-offshoot','start','stop','reconcile','ccc-status','reindex','verify-offshoot','desktop']:
         q=sub.add_parser(name);q.add_argument('--home',type=Path,default=manager.DEFAULT_HOME)
         if name in ['install','update']:q.add_argument('--source',type=Path);q.add_argument('--activate',action='store_true');q.add_argument('--offline',action='store_true')
         if name in ['install','update','activate','rollback']:q.add_argument('--offshoot-idle',action='store_true');q.add_argument('--interrupt-ai',action='store_true')
         if name=='activate':q.add_argument('--release',required=True)
+        if name=='desktop':q.add_argument('--desktop',type=Path)
         if name=='reindex':q.add_argument('--project',type=Path,required=True);q.add_argument('--run',action='store_true');q.add_argument('--offshoot-idle',action='store_true')
         if name=='configure':q.add_argument('--volume',required=True);q.add_argument('--ingest-folder',default='Ingests');q.add_argument('--port',type=int,default=8766)
         if name=='configure-offshoot':q.add_argument('--offshoot-idle',action='store_true')
@@ -130,6 +131,11 @@ def main():
                     with manager.stopped_service(shared):run(command)
                 else:run(command)
             result={'reindex':'complete' if a.run else 'plan','service':'stopped'}
+        elif a.command=='desktop':
+            from desktop import install
+            current(a.home)
+            with manager.locked(a.home):save_launcher(a.home)
+            result=install(a.home,a.desktop)
         elif a.command=='verify-offshoot':
             release=current(a.home);run([release/'.venv/bin/python',release/'deploy/offshoot_status.py']);result={'changes_made':False}
         elif a.command=='ccc-status':

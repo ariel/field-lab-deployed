@@ -92,6 +92,45 @@ def tool(spec, name, root, cache, offline):
     return target
 
 
+def build_ffmpeg(root, lock, cache, offline, env):
+    """Build in an explicit space-free temporary path; publish only static tools.
+
+    FFmpeg's generated config.sh does not quote prefixes containing spaces.
+    Its build prefix is disposable and never the operator's application path.
+    """
+    root = Path(root).resolve(); target = relative(root, 'tools/ffmpeg')
+    if target.is_symlink(): raise ValueError('FFmpeg directory may not be a symlink')
+    if all((target / 'bin' / name).is_file() for name in ('ffmpeg', 'ffprobe')): return target
+    archive = fetch(lock['ffmpeg'], cache, offline)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    # Explicit dir ignores an operator TMPDIR with spaces or shell metacharacters.
+    with tempfile.TemporaryDirectory(prefix='field-lab-ffmpeg-', dir='/private/tmp') as directory:
+        work = Path(directory); extract(archive, work)
+        source = relative(work, lock['ffmpeg']['folder']); prefix = work / 'install'
+        (work / 'tmp').mkdir(); build_env = dict(env, TMPDIR=str(work / 'tmp'))
+        run([source / 'configure', '--prefix=' + str(prefix), '--disable-autodetect', '--disable-doc', '--disable-ffplay', '--disable-debug', '--disable-x86asm', '--enable-small', '--enable-videotoolbox', '--enable-audiotoolbox'], source, build_env)
+        run(['/usr/bin/make', '-j2'], source, build_env)
+        run(['/usr/bin/make', 'install'], source, build_env)
+        binaries = [prefix / 'bin' / name for name in ('ffmpeg', 'ffprobe')]
+        if any(not path.is_file() or path.is_symlink() for path in binaries):
+            raise RuntimeError('FFmpeg source build did not produce both standalone binaries')
+        staging = target.parent / ('.ffmpeg-stage-' + uuid.uuid4().hex)
+        try:
+            (staging / 'bin').mkdir(parents=True)
+            for source_bin in binaries:
+                dest = staging / 'bin' / source_bin.name; shutil.copy2(source_bin, dest)
+                with dest.open('rb') as stream: os.fsync(stream.fileno())
+            # Preserve an interrupted candidate's diagnostic artifacts; no active
+            # release can reach this function because prepare rejects it first.
+            if target.exists(): target.rename(target.with_name('ffmpeg-incomplete-' + uuid.uuid4().hex))
+            os.replace(staging, target)
+            fd = os.open(target.parent, os.O_RDONLY)
+            try: os.fsync(fd)
+            finally: os.close(fd)
+        finally:
+            if staging.exists(): shutil.rmtree(staging)
+    return target
+
 def verify_models(root, lock):
     return [row['path'] for row in lock['model_files'] if not valid(relative(root / 'models', row['path']), row)]
 
@@ -155,12 +194,8 @@ def prepare(root, cache, offline=False):
         if offline: args.append('--offline')
         run(args, root / part, env)
     run([node / 'bin/npm', 'run', 'build'], root / 'viewer', env)
-    # Build LGPL FFmpeg from pinned official sources: no GPL or host external libraries.
-    ffmpeg = root / 'tools/ffmpeg'
-    if not (ffmpeg / 'bin/ffmpeg').is_file() or not (ffmpeg / 'bin/ffprobe').is_file():
-        source = tool(lock['ffmpeg'], 'ffmpeg-source', root, cache, offline)
-        run([source / 'configure', '--prefix=' + str(ffmpeg), '--disable-autodetect', '--disable-doc', '--disable-ffplay', '--disable-debug', '--disable-x86asm', '--enable-small', '--enable-videotoolbox', '--enable-audiotoolbox'], source, env)
-        run(['/usr/bin/make', '-j2'], source, env); run(['/usr/bin/make', 'install'], source, env)
+    # Build LGPL FFmpeg with a disposable prefix, then relocate static binaries.
+    ffmpeg = build_ffmpeg(root, lock, cache, offline, env)
     for name in ['ffmpeg', 'ffprobe']:
         target = root / 'bin' / name
         if not target.exists(): target.symlink_to(os.path.relpath(ffmpeg / 'bin' / name, target.parent))

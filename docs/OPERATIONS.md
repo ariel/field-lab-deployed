@@ -22,6 +22,7 @@ bash deploy/bootstrap.sh activate --release RELEASE_ID --offshoot-idle
 bash deploy/bootstrap.sh configure --volume "/Volumes/YOUR DRIVE" --ingest-folder Ingests
 bash deploy/bootstrap.sh configure-offshoot --offshoot-idle
 bash deploy/bootstrap.sh verify-offshoot
+bash deploy/bootstrap.sh desktop
 bash deploy/bootstrap.sh doctor
 bash deploy/bootstrap.sh start
 ```
@@ -38,6 +39,8 @@ bash deploy/bootstrap.sh start
 ```
 
 The candidate ID is a source-tree hash, distinct from the Git commit; record both. `--home "/chosen/application/home"` selects another application home on every command. Use the same home consistently. `stop`, `reconcile`, and `status` are available through the same entry point. Roll back at a quiet point with `rollback --offshoot-idle`, check `doctor`, then explicitly `start`; review database compatibility first. No command here configures CCC. `ccc-status` inventories its supported CLI without changing tasks; see [CCC setup](CCC-SETUP.md). Read [analysis/UI upgrade behavior](UPGRADES.md) before requesting a reindex.
+
+The optional [Desktop apps](DESKTOP.md) provide double-click entry points for ingest, library, native progress and stopping AI. They keep their paths across release switches.
 
 ## What persists
 
