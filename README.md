@@ -12,11 +12,17 @@ This is an early deployment release. Supported target: **Apple Silicon, macOS 27
 
 ## Install with Codex
 
-Clone this repository into a working folder, open that folder in Codex, and ask:
+Paste this single prompt into Codex on the Mac you want to set up:
 
-> Use the `$field-lab` skill in `.agents/skills/field-lab/SKILL.md` to install this workflow. Follow `docs/prompts/FIRST-INSTALL.md` and inspect this machine before choosing configuration.
+```text
+Install the field-lab Codex skill from https://github.com/mattb/field-lab-deployed/tree/v0.1.0-alpha.1/.agents/skills/field-lab, then read its SKILL.md directly and start the first-time install process for that same release on this Mac. Continue in this turn rather than waiting for automatic skill discovery. OffShoot Pro and CCC are already installed.
+```
 
-The [install prompt](docs/prompts/FIRST-INSTALL.md), [update prompt](docs/prompts/FIELD-UPDATE.md), and [operations guide](docs/OPERATIONS.md) provide commands and recovery steps. The skill lives in the repository; no global skill installation is required when the checkout is the Codex project.
+This pins both the skill and application to the same tested release. Codex installs the skill, finds or clones the source checkout, checks the Mac, prepares the local software/models, and guides the drive configuration and acceptance tests. It asks for the ingest destination when the actual drive cannot be established from your session. No API key is needed. CCC task setup follows separately after the second physical drive is chosen.
+
+The first-install process creates four native Desktop launchers: **Field Lab Ingest**, **Field Lab Library**, **Field Lab AI Progress**, and **Field Lab Stop AI**. They follow the active release across updates, show native error alerts and run without Terminal windows. Ingest opens OffShoot; selecting the card and starting a transfer remain explicit. See [Desktop launchers](docs/DESKTOP.md).
+
+The [skill](.agents/skills/field-lab/SKILL.md), [install prompt](docs/prompts/FIRST-INSTALL.md), [update prompt](docs/prompts/FIELD-UPDATE.md), and [operations guide](docs/OPERATIONS.md) contain the underlying steps and recovery commands. A globally installed skill locates its repository independently of its installation folder.
 
 For a reviewed source checkout:
 
