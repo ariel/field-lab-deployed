@@ -1,0 +1,16 @@
+[
+  {
+    "ignoreBundles" : [
+      ""
+    ],
+    "ignoreEmptyFolders" : false,
+    "flattenFolders" : false,
+    "folderPattern" : "Ingests/{YYYY}{MM}{DD}/{Source Name}-{Counter}",
+    "doNotCopyFiles" : [
+
+    ],
+    "counter" : "002",
+    "renamePattern" : "",
+    "labelPattern" : ""
+  }
+]

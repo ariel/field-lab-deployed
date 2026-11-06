@@ -1,0 +1,17 @@
+# Field update: paste into Codex when internet is available
+
+Replace `RELEASE` with the maintainer's release/tag or full commit. Keep the previous release until the new one is checked.
+
+```text
+Update my installed Field Lab workflow from https://github.com/mattb/field-lab-deployed to RELEASE. Read the checkout's AGENTS.md, docs/OPERATIONS.md, docs/UPGRADES.md and this release's compatibility/validation notes. Inspect the actual installed release, configured drive UUID, service status, queue, free storage and source checkout before changing anything.
+
+Preserve the checkout's local changes. Fetch the exact requested ref and prepare a separate candidate using the repository's deployment scripts while the current version remains installed. Do not pull into the active release. Reuse verified local downloads; if internet fails, leave the current release active and report the incomplete preparation. A code/model dependency change must pass its local readiness checks, not just exist on disk.
+
+Keep all media, _DIT_NOTES databases, operator names/notes/links, transfer receipts, durable queue and machine settings. Do not copy sample databases, reset identities, clear indexes, change the configured drive or rewrite OffShoot/CCC preferences. Stop before a schema-incompatible update unless the documented backup/compatibility plan protects subsequent operator edits. Use SQLite's backup API if a metadata backup is required; do not copy a live database without its WAL.
+
+Before activation, establish a quiet moment with no OffShoot copy and no AI or chat work in progress. If work is active, finish preparing but defer activation. Stop the existing service cleanly, activate atomically through the provided manager, and check readiness. Before restarting, use the read-only reindex plan for each relevant existing media project to distinguish a new analysis profile from a UI/search-only upgrade. Show analyze/reuse counts. If this update request or the release instructions expressly request reanalysis of those registered scopes, run the managed resumable reindex process during the quiet period. Otherwise do not start a new analysis backlog without explaining it to the operator; service startup also reconciles against the new profile. A React-only update should reuse complete analysis and does not need ASR/VLM work. Restart only after the chosen scope/backlog is understood, then inspect status/reconciliation. If health checks fail, use the documented code rollback; never overwrite newer operator data with an older backup automatically.
+
+Run the supplied deployment tests and local offline readiness check. Reopen the existing library and verify an existing name/note, then use a disposable small clip for any new processing behavior. Read docs/UPGRADES.md. If I request reanalysis after a prompt/model change, plan the registered project scopes with reindex, report the work, then run it while the service is stopped using --run --offshoot-idle. This request authorizes that reanalysis. If I have not requested it, do not reanalyze all footage merely as an update smoke test. A React-only update should reuse analysis; reload the browser after restarting the server. Explain any deferred mounted-drive/physical-transfer tests. Leave CCC unchanged and preserve the previous release.
+
+Report old/new commit, checks run with results, remaining backlog, any needed operator action, and the rollback command. Do not format cards, delete old releases automatically or describe unrun checks as passed.
+```

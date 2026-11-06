@@ -1,0 +1,30 @@
+name: Source checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  deployment-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m unittest discover -s tests -p 'test_deploy.py' -v
+      - run: python -m unittest discover -s tests -p 'test_bootstrap.py' -v
+      - run: python -m unittest discover -s tests -p 'test_field.py' -v
+  viewer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.11.0'
+          cache: npm
+          cache-dependency-path: viewer/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+        working-directory: viewer
+      - run: npm test
+        working-directory: viewer
+      - run: npm run build
+        working-directory: viewer

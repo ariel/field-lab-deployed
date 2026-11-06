@@ -1,0 +1,25 @@
+# Independent durability review
+
+The canonical project was inspected read-only. Its revision-22 operator state has the trailer face named Ariel and an explicit face-to-voice link. A consistent snapshot was created with SQLite's backup API, then copied into a disposable project. Replaying all eight sealed analysis results into that clone left the complete names, links, annotations, audit count, observation counts and edit revision unchanged. The original project database was never mutated by these tests.
+
+The existing store uses SQLite WAL with synchronous=FULL. Each operator edit, audit row and edit-revision increment share a BEGIN IMMEDIATE transaction. API acknowledgement follows the committed operation; shared search publication is derived afterward. A search-index failure can leave the index behind the committed metadata revision, which the startup/background revision reconciliation is designed to rebuild. The sealed catalog/vector pair is published together, so callers can continue reading the previous coherent search revision while rebuilding.
+
+The independent audit agreed with the implementation owner that macOS fullfsync/checkpoint_fullfsync and explicit initial directory durability should be enabled, and that constructor/split/migration race boundaries warranted hardening. Those changes are now implemented. An independent rerun of five fixture-only tests passed in 5.728 seconds: twenty-four SIGKILL cases around commit/audit boundaries, eight concurrent initializers, WAL-aware migration/no-overwrite protection and an operator edit concurrent with an index read snapshot. A fresh disposable ProjectStore connection reports WAL, synchronous=2 (FULL), fullfsync=1, checkpoint_fullfsync=1 and foreign_keys=1. Replaying all eight original sealed results into the user-state clone after hardening again leaves all operator state unchanged. Root owns the final controlled live-service restart check; no live-project fault test was run. SQLite documents that synchronous=FULL and the macOS-specific fullfsync flag are distinct controls. [SQLite PRAGMA documentation](https://www.sqlite.org/pragma.html#pragma_fullfsync).
+
+## CCC practice
+
+ThunderBlade X8 was observed to be APFS, UUID 3479111F-F7CA-4276-AF86-515895E024B2. Back up the whole project hierarchy, including `_DIT_NOTES`, rather than copying only its live `project.sqlite3`. Committed data can still reside in the neighboring WAL; copying a changing database and WAL independently can produce an inconsistent pair. A stopped/quiescent application or SQLite's consistent backup API avoids that problem. [SQLite backup guidance](https://www.sqlite.org/howtocorrupt.html#_backup_or_restore_while_a_transaction_is_active).
+
+Bombich states that CCC automatically takes and reads from a temporary read-only snapshot for eligible source volumes, even when retaining source snapshots is disabled. That point-in-time source is the preferred later CCC setup for this APFS volume. Confirm eligibility/use in the actual task rather than assuming it; no CCC task was configured or changed here. Include database and recovery files together, and never delete WAL files manually. The derived search index can be reconciled after restoring a consistent source snapshot. [CCC source snapshot behavior](https://support.bombich.com/hc/en-us/articles/21385602599191-Frequently-Asked-Questions-About-Snapshots).
+
+Process-kill tests establish software interruption recovery; they cannot prove an external drive's controller/cache behavior during physical power loss. No live-project crash test or drive disconnection was performed.
+
+Evidence: `snapshot-evidence.json`, `operator-edits-snapshot.sqlite3`, `operator-replay-evidence.json`, `replay_operator_clone.py`, `independent-fault-tests.log` and `hardening-independent-summary.json` in this directory.
+
+## Upstream SQLite correction
+
+A subsequent upstream-source audit found the original bundled SQLite 3.50.4 falls within the versions affected by the rare WAL-reset corruption race. The earlier fault tests do not establish absence of that upstream race. SQLite documents its fix in 3.51.3 and later, with selected backports. [Official WAL-reset details](https://sqlite.org/wal.html#walreset).
+
+The replacement official standalone CPython 3.12.16 candidate reports SQLite 3.53.1. Its archive hash was independently matched to the official GitHub release API digest. Ten symlinks remain within the candidate bundle; eleven Mach-O binaries have no external non-system absolute library dependencies. Existing NumPy/OpenCV/MLX audio/VLM packages import under the candidate. A separate independent run of six fixture tests, including the twenty-four process kills, passes in 7.515 seconds. The new shared version guard rejects an unfixed interpreter before opening the registry or queue, and uses the same standard-library SQLite engine throughout. No alternate SQLite wrapper was introduced. Root owns controlled interpreter promotion/restart and verification of the latest operator state.
+
+Evidence: `python-candidate/independent-checksum.json`, `independent-portability.json`, `independent-fault-tests.log`, and `independent-summary.json`.

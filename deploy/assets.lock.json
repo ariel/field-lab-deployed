@@ -1,0 +1,659 @@
+{
+  "schema": 1,
+  "platform": {
+    "os": "Darwin",
+    "arch": "arm64",
+    "minimum_macos": 27
+  },
+  "python": {
+    "url": "https://github.com/astral-sh/python-build-standalone/releases/download/20261026/cpython-3.12.16%2B20261026-aarch64-apple-darwin-install_only.tar.gz",
+    "sha256": "fbf4afef53c2a6b72bb741bc06d5671a9dfaf87bd84e5aa73ac9b3d0d589f14e",
+    "folder": "python"
+  },
+  "node": {
+    "url": "https://nodejs.org/dist/v24.11.0/node-v24.11.0-darwin-arm64.tar.gz",
+    "sha256": "0be2ab2816a4fa02d1acff014a434f29f56d8d956f5af6a98b70ced6c5f4d201",
+    "folder": "node-v24.11.0-darwin-arm64"
+  },
+  "uv": {
+    "url": "https://github.com/astral-sh/uv/releases/download/0.9.24/uv-aarch64-apple-darwin.tar.gz",
+    "sha256": "89661d9a16682197086df54bb43d0b03e58e23d4d9360fc8c6c0166f2828fd71",
+    "folder": "uv-aarch64-apple-darwin"
+  },
+  "ffmpeg": {
+    "url": "https://codeload.github.com/FFmpeg/FFmpeg/tar.gz/140fd653aed8cad774f991ba083e2d01e86420c7",
+    "sha256": "5c4a9e51e706b8deba835f02ea70e1e1101187f601adae72b36ec2b17b6f15be",
+    "folder": "FFmpeg-140fd653aed8cad774f991ba083e2d01e86420c7",
+    "version": "8.0"
+  },
+  "model_files": [
+    {
+      "path": "parakeet/README.md",
+      "bytes": 1081,
+      "sha256": "724e3ba46903986ff6caeb8fddb7495c06b5a7a8d908f11e43cc0a7e136b5e23",
+      "url": "https://huggingface.co/mlx-community/parakeet-tdt-0.6b-v3/resolve/ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15/README.md?download=true"
+    },
+    {
+      "path": "parakeet/config.json",
+      "bytes": 244093,
+      "sha256": "f320f1292511f34ec47f513755fe20fd01dbfc09a925d42730e66059a6e1ef4c",
+      "url": "https://huggingface.co/mlx-community/parakeet-tdt-0.6b-v3/resolve/ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15/config.json?download=true"
+    },
+    {
+      "path": "parakeet/model.safetensors",
+      "bytes": 2508288736,
+      "sha256": "05e01c7f396c298cf7d23f61da7b504adeab698f0aaeafd9c82d198625464592",
+      "url": "https://huggingface.co/mlx-community/parakeet-tdt-0.6b-v3/resolve/ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15/model.safetensors?download=true"
+    },
+    {
+      "path": "parakeet/tokenizer.model",
+      "bytes": 360916,
+      "sha256": "eacec2b0a77f336d4a2ca4a25a7047575d3c2b74de47e997f4c205126ed3135e",
+      "url": "https://huggingface.co/mlx-community/parakeet-tdt-0.6b-v3/resolve/ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15/tokenizer.model?download=true"
+    },
+    {
+      "path": "parakeet/tokenizer.vocab",
+      "bytes": 101024,
+      "sha256": "41130ff456706304a1adec782ccc9e003c4d417e8e324353d281be958cac4e17",
+      "url": "https://huggingface.co/mlx-community/parakeet-tdt-0.6b-v3/resolve/ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15/tokenizer.vocab?download=true"
+    },
+    {
+      "path": "parakeet/vocab.txt",
+      "bytes": 46772,
+      "sha256": "3cde1409fd78783a79b29ed4d32da57c746993856f7c8263bcb905d2e5839db7",
+      "url": "https://huggingface.co/mlx-community/parakeet-tdt-0.6b-v3/resolve/ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15/vocab.txt?download=true"
+    },
+    {
+      "path": "Qwen3.5-4B-4bit/chat_template.jinja",
+      "bytes": 7756,
+      "sha256": "a4aee8afcf2e0711942cf848899be66016f8d14a889ff9ede07bca099c28f715",
+      "url": "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit/resolve/0e7ffd5c629ef7719d4cbc04069232580bfa9d9c/chat_template.jinja?download=true"
+    },
+    {
+      "path": "Qwen3.5-4B-4bit/config.json",
+      "bytes": 3366,
+      "sha256": "f3efc81b2ea8d96a45301037d3ccccbcccdef44a961845c87f286aaddbc6eaaa",
+      "url": "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit/resolve/0e7ffd5c629ef7719d4cbc04069232580bfa9d9c/config.json?download=true"
+    },
+    {
+      "path": "Qwen3.5-4B-4bit/model.safetensors",
+      "bytes": 3034300695,
+      "sha256": "5fb9acd0246866381cf8c5c354c6db1019f6498eec4ccb4f5edcc71ffeacb2db",
+      "url": "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit/resolve/0e7ffd5c629ef7719d4cbc04069232580bfa9d9c/model.safetensors?download=true"
+    },
+    {
+      "path": "Qwen3.5-4B-4bit/model.safetensors.index.json",
+      "bytes": 101944,
+      "sha256": "52e534c41f7b97708329c85f762e5882bf48bd5955a422c6ae74eba321e6048a",
+      "url": "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit/resolve/0e7ffd5c629ef7719d4cbc04069232580bfa9d9c/model.safetensors.index.json?download=true"
+    },
+    {
+      "path": "Qwen3.5-4B-4bit/preprocessor_config.json",
+      "bytes": 390,
+      "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+      "url": "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit/resolve/0e7ffd5c629ef7719d4cbc04069232580bfa9d9c/preprocessor_config.json?download=true"
+    },
+    {
+      "path": "Qwen3.5-4B-4bit/processor_config.json",
+      "bytes": 1300,
+      "sha256": "14932921ca485d458a04dafd8069fbb0a4505622a48208d19ed247115801385b",
+      "url": "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit/resolve/0e7ffd5c629ef7719d4cbc04069232580bfa9d9c/processor_config.json?download=true"
+    },
+    {
+      "path": "Qwen3.5-4B-4bit/tokenizer.json",
+      "bytes": 19989343,
+      "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4",
+      "url": "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit/resolve/0e7ffd5c629ef7719d4cbc04069232580bfa9d9c/tokenizer.json?download=true"
+    },
+    {
+      "path": "Qwen3.5-4B-4bit/tokenizer_config.json",
+      "bytes": 1139,
+      "sha256": "e98f1901ac6f0adff67b1d540bfa0c36ac1a0cf59eb72ed78146ef89aafa1182",
+      "url": "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit/resolve/0e7ffd5c629ef7719d4cbc04069232580bfa9d9c/tokenizer_config.json?download=true"
+    },
+    {
+      "path": "Qwen3.5-4B-4bit/video_preprocessor_config.json",
+      "bytes": 385,
+      "sha256": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+      "url": "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit/resolve/0e7ffd5c629ef7719d4cbc04069232580bfa9d9c/video_preprocessor_config.json?download=true"
+    },
+    {
+      "path": "Qwen3.5-4B-4bit/vocab.json",
+      "bytes": 6722759,
+      "sha256": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003",
+      "url": "https://huggingface.co/mlx-community/Qwen3.5-4B-4bit/resolve/0e7ffd5c629ef7719d4cbc04069232580bfa9d9c/vocab.json?download=true"
+    },
+    {
+      "path": "diarization/config.json",
+      "bytes": 1521,
+      "sha256": "f215091252bc54f8dcc7d682962a659e03a6bcb26d1c86e4728b8c6730130eb4",
+      "url": "https://huggingface.co/mlx-community/Nemotron-3-Diarization/resolve/59ed2dbfc1346dcea9d423c71306a3a2499c568f/config.json?download=true"
+    },
+    {
+      "path": "diarization/model.safetensors",
+      "bytes": 198632220,
+      "sha256": "21e8427d1795c9c46c5800f56b16061734ffd0dcadd71d9bcf0b4d6ef7261da5",
+      "url": "https://huggingface.co/mlx-community/Nemotron-3-Diarization/resolve/59ed2dbfc1346dcea9d423c71306a3a2499c568f/model.safetensors?download=true"
+    },
+    {
+      "path": "diarization/README.md",
+      "bytes": 1402,
+      "sha256": "d1b1fbd0f419306e2de500e1e1884aff0a90d8cc0b9422152c18929d903e44e9",
+      "url": "https://huggingface.co/mlx-community/Nemotron-3-Diarization/resolve/59ed2dbfc1346dcea9d423c71306a3a2499c568f/README.md?download=true"
+    },
+    {
+      "path": "speaker/config.json",
+      "bytes": 3076,
+      "sha256": "787aff832a8a91f3ba5d5df09c62f9bcdabb885aa267299fac014cdc0f0d608e",
+      "url": "https://huggingface.co/aufklarer/SpeechBrain-ECAPA-VoxCeleb-20M-MLX/resolve/e749e6e08557f4a3ceb6ce3bf6f0b79efe592a77/config.json?download=true"
+    },
+    {
+      "path": "speaker/model.safetensors",
+      "bytes": 41637032,
+      "sha256": "76ea14d750a69f900c1545d586f8069f1805c38e7226a2eebf4c90b4dd5804c3",
+      "url": "https://huggingface.co/aufklarer/SpeechBrain-ECAPA-VoxCeleb-20M-MLX/resolve/e749e6e08557f4a3ceb6ce3bf6f0b79efe592a77/model.safetensors?download=true"
+    },
+    {
+      "path": "speaker/artifact_manifest.json",
+      "bytes": 301,
+      "sha256": "f410b4873012ff9f39c8849e3e73663cbd1e647c61208a4942116380aad616c5",
+      "url": "https://huggingface.co/aufklarer/SpeechBrain-ECAPA-VoxCeleb-20M-MLX/resolve/e749e6e08557f4a3ceb6ce3bf6f0b79efe592a77/artifact_manifest.json?download=true"
+    },
+    {
+      "path": "speaker/validation.json",
+      "bytes": 1583,
+      "sha256": "4a68ff290b46a7d86a5e1acec388bbf82755c154aa875152eee7a2d1b96fb769",
+      "url": "https://huggingface.co/aufklarer/SpeechBrain-ECAPA-VoxCeleb-20M-MLX/resolve/e749e6e08557f4a3ceb6ce3bf6f0b79efe592a77/validation.json?download=true"
+    },
+    {
+      "path": "speaker/LICENSE",
+      "bytes": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "url": "https://huggingface.co/aufklarer/SpeechBrain-ECAPA-VoxCeleb-20M-MLX/resolve/e749e6e08557f4a3ceb6ce3bf6f0b79efe592a77/LICENSE?download=true"
+    },
+    {
+      "path": "speaker/README.md",
+      "bytes": 2784,
+      "sha256": "10d93f2247e933a3a74bdf557b4248ec78b673f03ed9937fd4af9690706babf2",
+      "url": "https://huggingface.co/aufklarer/SpeechBrain-ECAPA-VoxCeleb-20M-MLX/resolve/e749e6e08557f4a3ceb6ce3bf6f0b79efe592a77/README.md?download=true"
+    },
+    {
+      "path": "mlx-search/text/1_Pooling/config.json",
+      "bytes": 190,
+      "sha256": "4be450dde3b0273bb9787637cfbd28fe04a7ba6ab9d36ac48e92b11e350ffc23",
+      "url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/1_Pooling/config.json?download=true"
+    },
+    {
+      "path": "mlx-search/text/config.json",
+      "bytes": 612,
+      "sha256": "953f9c0d463486b10a6871cc2fd59f223b2c70184f49815e7efbcab5d8908b41",
+      "url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/config.json?download=true"
+    },
+    {
+      "path": "mlx-search/text/model.safetensors",
+      "bytes": 90868376,
+      "sha256": "53aa51172d142c89d9012cce15ae4d6cc0ca6895895114379cacb4fab128d9db",
+      "url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/model.safetensors?download=true"
+    },
+    {
+      "path": "mlx-search/text/sentence_bert_config.json",
+      "bytes": 53,
+      "sha256": "fc1993fde0a95c24ec6c022539d41cf6e2f7c9721e5415d6fb6897472a9cd4b7",
+      "url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/sentence_bert_config.json?download=true"
+    },
+    {
+      "path": "mlx-search/text/special_tokens_map.json",
+      "bytes": 112,
+      "sha256": "303df45a03609e4ead04bc3dc1536d0ab19b5358db685b6f3da123d05ec200e3",
+      "url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/special_tokens_map.json?download=true"
+    },
+    {
+      "path": "mlx-search/text/tokenizer.json",
+      "bytes": 466247,
+      "sha256": "be50c3628f2bf5bb5e3a7f17b1f74611b2561a3a27eeab05e5aa30f411572037",
+      "url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer.json?download=true"
+    },
+    {
+      "path": "mlx-search/text/tokenizer_config.json",
+      "bytes": 350,
+      "sha256": "acb92769e8195aabd29b7b2137a9e6d6e25c476a4f15aa4355c233426c61576b",
+      "url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/tokenizer_config.json?download=true"
+    },
+    {
+      "path": "mlx-search/text/vocab.txt",
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+      "url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2/resolve/1110a243fdf4706b3f48f1d95db1a4f5529b4d41/vocab.txt?download=true"
+    },
+    {
+      "path": "mlx-search/reranker/config.json",
+      "bytes": 794,
+      "sha256": "380e02c93f431831be65d99a4e7e5f67c133985bf2e77d9d4eba46847190bacc",
+      "url": "https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/233902d25c440f23af6f7d6e94d2946bac0bee0a/config.json?download=true"
+    },
+    {
+      "path": "mlx-search/reranker/model.safetensors",
+      "bytes": 90870598,
+      "sha256": "821d1aa69520101d6e0737f78a042ae25b19e5cb9160701909d10434f4aeb0ae",
+      "url": "https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/233902d25c440f23af6f7d6e94d2946bac0bee0a/model.safetensors?download=true"
+    },
+    {
+      "path": "mlx-search/reranker/special_tokens_map.json",
+      "bytes": 132,
+      "sha256": "3c3507f36dff57bce437223db3b3081d1e2b52ec3e56ee55438193ecb2c94dd6",
+      "url": "https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/233902d25c440f23af6f7d6e94d2946bac0bee0a/special_tokens_map.json?download=true"
+    },
+    {
+      "path": "mlx-search/reranker/tokenizer.json",
+      "bytes": 711396,
+      "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+      "url": "https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/233902d25c440f23af6f7d6e94d2946bac0bee0a/tokenizer.json?download=true"
+    },
+    {
+      "path": "mlx-search/reranker/tokenizer_config.json",
+      "bytes": 1330,
+      "sha256": "a5c2e5a7b1a29a0702cd28c08a399b5ecc110c263009d17f7e3b415f25905fd8",
+      "url": "https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/233902d25c440f23af6f7d6e94d2946bac0bee0a/tokenizer_config.json?download=true"
+    },
+    {
+      "path": "mlx-search/reranker/vocab.txt",
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+      "url": "https://huggingface.co/cross-encoder/ms-marco-MiniLM-L6-v2/resolve/233902d25c440f23af6f7d6e94d2946bac0bee0a/vocab.txt?download=true"
+    },
+    {
+      "path": "mlx-search/clip/config.json",
+      "bytes": 4186,
+      "sha256": "b575ef3c36f2a057fa19e221650105052d61cc9c1a972ec15019c6261ec98770",
+      "url": "https://huggingface.co/openai/clip-vit-base-patch32/resolve/3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268/config.json?download=true"
+    },
+    {
+      "path": "mlx-search/clip/preprocessor_config.json",
+      "bytes": 316,
+      "sha256": "910e70b3956ac9879ebc90b22fb3bc8a75b6a0677814500101a4c072bd7857bd",
+      "url": "https://huggingface.co/openai/clip-vit-base-patch32/resolve/3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268/preprocessor_config.json?download=true"
+    },
+    {
+      "path": "mlx-search/clip/tokenizer.json",
+      "bytes": 2224041,
+      "sha256": "b556ac8c99757ffb677208af34bc8c6721572114111a6e0aaf5fa69ff0b8d842",
+      "url": "https://huggingface.co/openai/clip-vit-base-patch32/resolve/3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268/tokenizer.json?download=true"
+    },
+    {
+      "path": "mlx-search/clip/tokenizer_config.json",
+      "bytes": 592,
+      "sha256": "34b7336e4bee12e0a9730eaf5189f582ef3c3eea5027f65730e5717256755aad",
+      "url": "https://huggingface.co/openai/clip-vit-base-patch32/resolve/3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268/tokenizer_config.json?download=true"
+    },
+    {
+      "path": "mlx-search/clip/special_tokens_map.json",
+      "bytes": 389,
+      "sha256": "f8c0d6c39aee3f8431078ef6646567b0aba7f2246e9c54b8b99d55c22b707cbf",
+      "url": "https://huggingface.co/openai/clip-vit-base-patch32/resolve/3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268/special_tokens_map.json?download=true"
+    },
+    {
+      "path": "mlx-search/clip/vocab.json",
+      "bytes": 862328,
+      "sha256": "5047b556ce86ccaf6aa22b3ffccfc52d391ea4accdab9c2f2407da5b742d4363",
+      "url": "https://huggingface.co/openai/clip-vit-base-patch32/resolve/3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268/vocab.json?download=true"
+    },
+    {
+      "path": "mlx-search/clip/merges.txt",
+      "bytes": 524657,
+      "sha256": "f526393189112391ce6f9795d4695f704121ce452c3aad1f5335cc41337eba85",
+      "url": "https://huggingface.co/openai/clip-vit-base-patch32/resolve/3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268/merges.txt?download=true"
+    },
+    {
+      "path": "mlx-search/clip/_vendor/model.py",
+      "bytes": 14136,
+      "sha256": "d54420b29ebbb6dbee29d0359ab4de581aa8d190d50b55a5fbd6998ee62c58a7",
+      "url": "https://raw.githubusercontent.com/ml-explore/mlx-examples/09b641aaa74f9737f747b62ad8c628405e7e25be/clip/model.py"
+    },
+    {
+      "path": "mlx-search/clip/_vendor/image_processor.py",
+      "bytes": 2925,
+      "sha256": "8ed050d13d2d8debde95574af9c8ba873749d73d7283a61c64e93806b1c836d7",
+      "url": "https://raw.githubusercontent.com/ml-explore/mlx-examples/09b641aaa74f9737f747b62ad8c628405e7e25be/clip/image_processor.py"
+    },
+    {
+      "path": "mlx-search/clip/_vendor/LICENSE",
+      "bytes": 1066,
+      "sha256": "ccfab7ccb2ea306f71531c8ca77bb55507606cd90768b1e32b8b52ab5b48cf01",
+      "url": "https://raw.githubusercontent.com/ml-explore/mlx-examples/09b641aaa74f9737f747b62ad8c628405e7e25be/LICENSE"
+    },
+    {
+      "path": "mlx-search/clip/model.safetensors",
+      "bytes": 302601770,
+      "sha256": "aaa0293e0daad54ccc3d4d8efa4d5da2df23c9c28384ce29d24d9e063e73f733",
+      "generated": true
+    },
+    {
+      "path": "faces/yunet.onnx",
+      "bytes": 232589,
+      "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+      "url": "https://media.githubusercontent.com/media/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_detection_yunet/face_detection_yunet_2023mar.onnx"
+    },
+    {
+      "path": "faces/sface.onnx",
+      "bytes": 38696353,
+      "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+      "url": "https://media.githubusercontent.com/media/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_recognition_sface/face_recognition_sface_2021dec.onnx"
+    },
+    {
+      "path": "faces/YUNET-LICENSE",
+      "bytes": 1085,
+      "sha256": "c83b8120c50ccbd4c4f96edf53141bdd566ebb8f8e9227e415326aa1b1aba958",
+      "url": "https://raw.githubusercontent.com/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_detection_yunet/LICENSE"
+    },
+    {
+      "path": "faces/SFACE-LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "url": "https://raw.githubusercontent.com/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_recognition_sface/LICENSE"
+    },
+    {
+      "path": "faces/YUNET-README.md",
+      "bytes": 3221,
+      "sha256": "a140c9e9574ff99d3dc1c435d5e8b5e60690dc91597e66387cbbb52be12cce4c",
+      "url": "https://raw.githubusercontent.com/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_detection_yunet/README.md"
+    },
+    {
+      "path": "faces/SFACE-README.md",
+      "bytes": 2267,
+      "sha256": "e090e126f3fb5c0b0b2d84ee644b17e42a70b2e45a90616814970b811e91d063",
+      "url": "https://raw.githubusercontent.com/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_recognition_sface/README.md"
+    },
+    {
+      "path": ".runtime/search-models/embeddings/config.json",
+      "bytes": 650,
+      "sha256": "7135149f7cffa1a573466c6e4d8423ed73b62fd2332c575bf738a0d033f70df7",
+      "url": "https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/751bff37182d3f1213fa05d7196b954e230abad9/config.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/embeddings/tokenizer.json",
+      "bytes": 711661,
+      "sha256": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
+      "url": "https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/751bff37182d3f1213fa05d7196b954e230abad9/tokenizer.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/embeddings/tokenizer_config.json",
+      "bytes": 366,
+      "sha256": "9261e7d79b44c8195c1cada2b453e55b00aeb81e907a6664974b4d7776172ab3",
+      "url": "https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/751bff37182d3f1213fa05d7196b954e230abad9/tokenizer_config.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/embeddings/special_tokens_map.json",
+      "bytes": 125,
+      "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+      "url": "https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/751bff37182d3f1213fa05d7196b954e230abad9/special_tokens_map.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/embeddings/vocab.txt",
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+      "url": "https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/751bff37182d3f1213fa05d7196b954e230abad9/vocab.txt?download=true"
+    },
+    {
+      "path": ".runtime/search-models/embeddings/onnx/model_quantized.onnx",
+      "bytes": 22972370,
+      "sha256": "afdb6f1a0e45b715d0bb9b11772f032c399babd23bfc31fed1c170afc848bdb1",
+      "url": "https://huggingface.co/Xenova/all-MiniLM-L6-v2/resolve/751bff37182d3f1213fa05d7196b954e230abad9/onnx/model_quantized.onnx?download=true"
+    },
+    {
+      "path": ".runtime/search-models/reranker/config.json",
+      "bytes": 824,
+      "sha256": "d827779a72d27ae68cf878a6fc2e954542663fe21ca515d9f4783fc96be2d37e",
+      "url": "https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/config.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/reranker/tokenizer.json",
+      "bytes": 711396,
+      "sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66",
+      "url": "https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/tokenizer.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/reranker/tokenizer_config.json",
+      "bytes": 1242,
+      "sha256": "0b29c7bfc889e53b36d9dd3e686dd4300f6525110eaa98c76a5dafceb2029f53",
+      "url": "https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/tokenizer_config.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/reranker/special_tokens_map.json",
+      "bytes": 125,
+      "sha256": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+      "url": "https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/special_tokens_map.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/reranker/vocab.txt",
+      "bytes": 231508,
+      "sha256": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3",
+      "url": "https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/vocab.txt?download=true"
+    },
+    {
+      "path": ".runtime/search-models/reranker/quantize_config.json",
+      "bytes": 722,
+      "sha256": "70258803fcd13ac45765fe3a814e191d3541b1313301fee2dee760214656ba66",
+      "url": "https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/quantize_config.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/reranker/onnx/model_quantized.onnx",
+      "bytes": 23143499,
+      "sha256": "e9d8ebf845c413e981c175bfe49a3bfa9b3dcce2a3ba54875ee5df5a58639fbe",
+      "url": "https://huggingface.co/Xenova/ms-marco-MiniLM-L-6-v2/resolve/a09144355adeed5f58c8ed011d209bf8ee5a1fec/onnx/model_quantized.onnx?download=true"
+    },
+    {
+      "path": ".runtime/search-models/clip/config.json",
+      "bytes": 4524,
+      "sha256": "493ef57ff783e42d1530c91b53469b7fdf8db8a9c1408e86998fcb7899a4f495",
+      "url": "https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/6b7c523703ae26e39be4b03774966f8571c7f523/config.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/clip/tokenizer.json",
+      "bytes": 2224119,
+      "sha256": "f7f3b7af117d467b58374797691a6438d3e6b9e9cef800dfd5dced7f697a90cd",
+      "url": "https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/6b7c523703ae26e39be4b03774966f8571c7f523/tokenizer.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/clip/tokenizer_config.json",
+      "bytes": 775,
+      "sha256": "60ba2912bc6344c94bc16bbdec27fa1209409167b6f2fdf3cfe9e65462ea3967",
+      "url": "https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/6b7c523703ae26e39be4b03774966f8571c7f523/tokenizer_config.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/clip/preprocessor_config.json",
+      "bytes": 520,
+      "sha256": "6f638fb9401a6d6296feff533ee7efe657b787c49f954f82f5906b36ef2a1b1f",
+      "url": "https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/6b7c523703ae26e39be4b03774966f8571c7f523/preprocessor_config.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/clip/special_tokens_map.json",
+      "bytes": 472,
+      "sha256": "c4864a9376a8401918425bed71fc14fc0e81f9b59ec45c1cf96cccb2df508eac",
+      "url": "https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/6b7c523703ae26e39be4b03774966f8571c7f523/special_tokens_map.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/clip/merges.txt",
+      "bytes": 524619,
+      "sha256": "9fd691f7c8039210e0fced15865466c65820d09b63988b0174bfe25de299051a",
+      "url": "https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/6b7c523703ae26e39be4b03774966f8571c7f523/merges.txt?download=true"
+    },
+    {
+      "path": ".runtime/search-models/clip/vocab.json",
+      "bytes": 862328,
+      "sha256": "5047b556ce86ccaf6aa22b3ffccfc52d391ea4accdab9c2f2407da5b742d4363",
+      "url": "https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/6b7c523703ae26e39be4b03774966f8571c7f523/vocab.json?download=true"
+    },
+    {
+      "path": ".runtime/search-models/clip/onnx/text_model_quantized.onnx",
+      "bytes": 64504507,
+      "sha256": "73baab855d406190da9faa498cfedf65f15cf309f4cc7385b7b032e6d08e5c3a",
+      "url": "https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/6b7c523703ae26e39be4b03774966f8571c7f523/onnx/text_model_quantized.onnx?download=true"
+    },
+    {
+      "path": ".runtime/search-models/clip/onnx/vision_model_quantized.onnx",
+      "bytes": 89117001,
+      "sha256": "583fd1110a514667812fee7d684952aaf82a99b959760c8d7dca7e0ab9839299",
+      "url": "https://huggingface.co/Xenova/clip-vit-base-patch32/resolve/6b7c523703ae26e39be4b03774966f8571c7f523/onnx/vision_model_quantized.onnx?download=true"
+    },
+    {
+      "path": ".runtime/browser/ort-wasm-simd-threaded.mjs",
+      "bytes": 20856,
+      "sha256": "43c25054b6b9ac000f786c65545ff83a45f871e0e310e8c2f4d48a363bb66db4",
+      "generated": true
+    },
+    {
+      "path": ".runtime/browser/ort-wasm-simd-threaded.wasm",
+      "bytes": 11133407,
+      "sha256": "f061472c6e77d6d50d079aacdc0ff9b63fee287ddd2cbf46cf62438d3891de2b",
+      "generated": true
+    },
+    {
+      "path": ".runtime/browser/ort-wasm-simd-threaded.jsep.mjs",
+      "bytes": 44484,
+      "sha256": "08fb86ec433c78bfb032c5d84a68b8e8e5a8d81268fa39e24314179a5767a5b9",
+      "generated": true
+    },
+    {
+      "path": ".runtime/browser/ort-wasm-simd-threaded.jsep.wasm",
+      "bytes": 21596019,
+      "sha256": "c46655e8a94afc45338d4cb2b840475f88e5012d524509916e505079c00bfa39",
+      "generated": true
+    }
+  ],
+  "model_json": {
+    "model-lock.json": {
+      "diarization": {
+        "repository": "mlx-community/Nemotron-3-Diarization",
+        "revision": "59ed2dbfc1346dcea9d423c71306a3a2499c568f",
+        "files": [
+          {
+            "path": "config.json",
+            "size": 1521,
+            "sha256": null,
+            "git_blob": "c4b2b2557030fe1acce075978b657e7184270811"
+          },
+          {
+            "path": "model.safetensors",
+            "size": 198632220,
+            "sha256": "21e8427d1795c9c46c5800f56b16061734ffd0dcadd71d9bcf0b4d6ef7261da5",
+            "git_blob": "37745e22b0658a3c050d1ea30072a8eedab8bfc0"
+          },
+          {
+            "path": "README.md",
+            "size": 1402,
+            "sha256": null,
+            "git_blob": "e9ae0eb0d14e8cef7b1097d639246ccec12861eb"
+          }
+        ]
+      },
+      "speaker": {
+        "repository": "aufklarer/SpeechBrain-ECAPA-VoxCeleb-20M-MLX",
+        "revision": "e749e6e08557f4a3ceb6ce3bf6f0b79efe592a77",
+        "files": [
+          {
+            "path": "config.json",
+            "size": 3076,
+            "sha256": null,
+            "git_blob": "a349d6b86b148e8dd155ce6e2d2b79d8bbb30da8"
+          },
+          {
+            "path": "model.safetensors",
+            "size": 41637032,
+            "sha256": "76ea14d750a69f900c1545d586f8069f1805c38e7226a2eebf4c90b4dd5804c3",
+            "git_blob": "bc049201e1c915afe96ae166de3908f065e01b8e"
+          },
+          {
+            "path": "artifact_manifest.json",
+            "size": 301,
+            "sha256": null,
+            "git_blob": "913a59101320e019f98f92ffa1c710f32551be3f"
+          },
+          {
+            "path": "validation.json",
+            "size": 1583,
+            "sha256": null,
+            "git_blob": "b93848b44da1cd169cd712bcbb96af02d7e997de"
+          },
+          {
+            "path": "LICENSE",
+            "size": 11357,
+            "sha256": null,
+            "git_blob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+          },
+          {
+            "path": "README.md",
+            "size": 2784,
+            "sha256": null,
+            "git_blob": "ed2400ea173870c1dc539a9908995970daa01aed"
+          }
+        ]
+      }
+    },
+    "faces/manifest.json": {
+      "revision": "48b10fa505aeb51fbd127fc60a5c660040e823b7",
+      "files": [
+        {
+          "file": "yunet.onnx",
+          "source": "https://media.githubusercontent.com/media/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_detection_yunet/face_detection_yunet_2023mar.onnx",
+          "sha256": "8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4",
+          "bytes": 232589,
+          "license": "MIT"
+        },
+        {
+          "file": "sface.onnx",
+          "source": "https://media.githubusercontent.com/media/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_recognition_sface/face_recognition_sface_2021dec.onnx",
+          "sha256": "0ba9fbfa01b5270c96627c4ef784da859931e02f04419c829e83484087c34e79",
+          "bytes": 38696353,
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "YUNET-LICENSE",
+          "source": "https://raw.githubusercontent.com/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_detection_yunet/LICENSE",
+          "sha256": "c83b8120c50ccbd4c4f96edf53141bdd566ebb8f8e9227e415326aa1b1aba958",
+          "bytes": 1085,
+          "license": "MIT"
+        },
+        {
+          "file": "SFACE-LICENSE",
+          "source": "https://raw.githubusercontent.com/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_recognition_sface/LICENSE",
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+          "bytes": 11358,
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "YUNET-README.md",
+          "source": "https://raw.githubusercontent.com/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_detection_yunet/README.md",
+          "sha256": "a140c9e9574ff99d3dc1c435d5e8b5e60690dc91597e66387cbbb52be12cce4c",
+          "bytes": 3221,
+          "license": "MIT"
+        },
+        {
+          "file": "SFACE-README.md",
+          "source": "https://raw.githubusercontent.com/opencv/opencv_zoo/48b10fa505aeb51fbd127fc60a5c660040e823b7/models/face_recognition_sface/README.md",
+          "sha256": "e090e126f3fb5c0b0b2d84ee644b17e42a70b2e45a90616814970b811e91d063",
+          "bytes": 2267,
+          "license": "Apache-2.0"
+        }
+      ]
+    },
+    "mlx-search/clip/manifest.json": {
+      "profile": "d59c5942a1437c3598fa1c50175f80cedcc04f14a05fd2c28196c212be0792f1",
+      "repository": "openai/clip-vit-base-patch32",
+      "source_revision": "3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
+      "source_sha256": "a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f",
+      "implementation_revision": "09b641aaa74f9737f747b62ad8c628405e7e25be",
+      "precision": "float16",
+      "weights": {
+        "path": "model.safetensors",
+        "bytes": 302601770,
+        "sha256": "aaa0293e0daad54ccc3d4d8efa4d5da2df23c9c28384ce29d24d9e063e73f733"
+      },
+      "converter": "torch.load(weights_only=True), tensor float16, safetensors.numpy.save_file; official MLX loader handles layout"
+    }
+  },
+  "clip_source": {
+    "url": "https://huggingface.co/openai/clip-vit-base-patch32/resolve/3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268/pytorch_model.bin?download=true",
+    "sha256": "a63082132ba4f97a80bea76823f544493bffa8082296d62d71581a4feff1576f",
+    "bytes": 605247071
+  }
+}

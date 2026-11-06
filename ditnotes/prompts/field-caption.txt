@@ -1,0 +1,1 @@
+Write a 4–8-word footage-search label naming the main visible subject and the surrounding condition or distinctive object. Describe only this still. Do not infer motion, occupation, intention, or unclear species or material. Use broad terms for uncertain details. Omit mood and lighting prose unless that is the visible subject. Output one plain phrase only. Empty frame: BLACK.

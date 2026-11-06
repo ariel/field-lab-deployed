@@ -1,0 +1,356 @@
+{
+  "reviewed_on": "2026-11-05",
+  "scope": "OffShoot automation section and linked workflow documentation; full text read, example code inspected but not executed",
+  "page_count": 38,
+  "asset_count": 19,
+  "source_configuration_file_count": 22,
+  "pages": [
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation.md",
+      "bytes": 5165,
+      "sha256": "6e8503f9a895e24f26e133a80da491d8eb703ee02645a3de41f7c3f84f66a9b9"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts.md",
+      "bytes": 5462,
+      "sha256": "12e82f4732d65274c3b96ddcaffd304edf389345486536264f8b4322664bfd58"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/event-log.md",
+      "bytes": 2619,
+      "sha256": "62c180f9c65330c3ab57159b8b3b9edeca2db808236f31349701efbc0509af1a"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events.md",
+      "bytes": 1793,
+      "sha256": "18eab4a5b9f08841159ae45daf2f8aa277c741030491830dc2336d3ad26d4dc4"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events/offshoot-started.md",
+      "bytes": 1901,
+      "sha256": "228189ab319124638115ea37fde27e66aebeda2fb5e9b7e7862727e65e1c755e"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events/disk-added.md",
+      "bytes": 2439,
+      "sha256": "208fa0a446e6136392a5a753a82fcdced99a0ff3c1a53c6fa78e9458a350e1bc"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events/disk-removed.md",
+      "bytes": 2026,
+      "sha256": "d7c219a934bffcaea7dd3626606c155259dbf5cf57e81a539f81971002c786cc"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events/disk-busy.md",
+      "bytes": 1990,
+      "sha256": "4b0e31fa424c10cdd3ab7cc4609a11cc649a6881b7b9b20f5b35bac3ec679e91"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events/disk-idle.md",
+      "bytes": 2099,
+      "sha256": "fb924dc8a53faa05473792dc08d84ebea1cb77c0ffdc1e2c136db27e64c79ae6"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events/disks-idle.md",
+      "bytes": 1915,
+      "sha256": "abd024789aa304c52d942cd70a4791007c14c793c98b68dff388a8c5f4c47919"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events/transfers-added.md",
+      "bytes": 2590,
+      "sha256": "1c8bfcc5152bc75cf7132e46d1dca2903511d6ee2f51adb55b021b24ccc27770"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events/source-added.md",
+      "bytes": 2004,
+      "sha256": "1dd7e90c3a8710501c55bfbe4ef00cd098671053b2953f4aaff2b98ca3ffdd58"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events/filecopycompleted.md",
+      "bytes": 3871,
+      "sha256": "a7d28668c8ef130730b106d9b7db9367ed3c5ff49d50f614285e2c44629e43f2"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/scripts/events/checkpoint-issue.md",
+      "bytes": 2256,
+      "sha256": "78538dd22df488a180bbcc6b1ebef71dcab5897c886d1f51c6bb60a8e7fef1e6"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/api.md",
+      "bytes": 10028,
+      "sha256": "3a16b77fce393b9ec3d8470ed0adf67ea939afdf45db9b9c3f59cebc4645338f"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/offshoot-helper.md",
+      "bytes": 8204,
+      "sha256": "0e58124522edcb33531a0895f9dfe7d2f3d99a2c58d8c37d8aa9cb67ea03b8e2"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/offshoot-helper/set-destinations-and-swap-presets.md",
+      "bytes": 2532,
+      "sha256": "d0fa98fe3f6a2a57488da94574a29e83b924d17f0136a19b490fd3bb43d88308"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/offshoot-helper/set-window-layout.md",
+      "bytes": 2465,
+      "sha256": "49f6494ca081d0f91268ae46620bec0c33513f3eba9ac413180c55e8b3e3cad1"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples.md",
+      "bytes": 1891,
+      "sha256": "547a066cb3797a51d72a27951fe038a4f49dc3896e8666ab001ccfa7b4b4b751"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/transfer-report.md",
+      "bytes": 2425,
+      "sha256": "673bd530b3b8f687f31cfe3246df52769a335e6644e9cf0055161bd5c5ff8786"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/move-transfer-log-into-source-folder.md",
+      "bytes": 2502,
+      "sha256": "892691189be3286f5bd81f81fda78902775eb3a2481e91f7e119589275b4766c"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/move-pdf-reports-into-destination-folder.md",
+      "bytes": 2597,
+      "sha256": "92176f567167a9af9e6da6d36af4a8729b05d75d0530ad03ea5d480ff30ff665"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/auto-set-destinations.md",
+      "bytes": 2811,
+      "sha256": "e57c83e9e7185ea4dc7bc74e7fd315433d6fce79969d832150cdeb5455cfb570"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/auto-set-preferences.md",
+      "bytes": 2845,
+      "sha256": "0ba09fd6159603f810da7915b48a6a3e94222df2c2d4a817e33cf8b7d8167d6d"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/automated-transfers.md",
+      "bytes": 3156,
+      "sha256": "ba10956d7baa98a71ce4c940ae4cbb821fdf2b354046ba23041d0c1ac387dbe1"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/delete-mhl-file.md",
+      "bytes": 2380,
+      "sha256": "3dd775bbed2ffcbcc7fd7eaeb4d36415e25fed3dddd0fd7a9cfa625c45881e20"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/send-a-notification-to-slack.md",
+      "bytes": 2735,
+      "sha256": "89470c6b887278c4409b3730e5612c84db4658fd7fabc0bffa99b2c11341f6b6"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/email-notifications.md",
+      "bytes": 2616,
+      "sha256": "1ad5939a88c138560c1c2be2fefcd5b899eed20c70f8bc36f938ced7abdd28c7"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/zcam-vid-stitch.md",
+      "bytes": 3610,
+      "sha256": "364b0283ee8a7e314e3abc10f5efedf509ba0675840bf393ee48785709fc386e"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/cascading-copy.md",
+      "bytes": 2548,
+      "sha256": "f4577abc12be4d3cc87843b9b22c5edc5b3090747a226144a9bc6567efec89bf"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/watch-folders.md",
+      "bytes": 5100,
+      "sha256": "18d7af2d5aa817806ccdef52e0a04148b035ec84d283f8a4fcbb0ad3c8275f2e"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/automation/examples/set-finder-tags.md",
+      "bytes": 2517,
+      "sha256": "505075682fb1b4029679fe30d196de1b24cd7536f9fa4a4cda1c6191a58eef8d"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/need-help.md",
+      "bytes": 2834,
+      "sha256": "e9cdf080a01ed3533ac0dca4970b538b74f5caed7903f3b26ea1ca888efa492a"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/verification.md",
+      "bytes": 7987,
+      "sha256": "b820666907485919b7e953441a5f918ff2e404b5f979f905c55a33ed18f29852"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/logging.md",
+      "bytes": 5623,
+      "sha256": "a4d28fa11d4c76fbd1b4568f9d0bcf8c376f4edc1ce1a3cda58245c2221b7b31"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/organization.md",
+      "bytes": 9972,
+      "sha256": "4cc7997f6327854378272c67520700328c4c15425bb71c50ece90f9f0bba33b0"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/labels.md",
+      "bytes": 11024,
+      "sha256": "0204eb6a4035c30bec75e0672078e3acf3d9a1e78607713d98700efe52800231"
+    },
+    {
+      "url": "https://docs.hedge.video/offshoot/features/elements.md",
+      "bytes": 17754,
+      "sha256": "71df4663c0355b2076374e95d1baa65a335b678aea88faed2a9d55ba0fa1edb8"
+    }
+  ],
+  "example_assets": [
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/scripts.md",
+      "bytes": 609,
+      "sha256": "c75e60313b27d32d35aa9689a26502bea2a155798ce0d4732a01a7b69b9ca421",
+      "inspected_files": [
+        "Log-OffShoot-Event-Info-to-File.py"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/offshoot-helper.md",
+      "bytes": 10701,
+      "sha256": "f5bdfbb7edd5226614ff45db4c2fc827254a44128ef1339c1adb45cb6b8c04c5",
+      "inspected_files": [
+        "Setup Hedge and Finder.json",
+        "Setup Hedge and Finder.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/offshoot-helper/set-destinations-and-swap-presets.md",
+      "bytes": 6137,
+      "sha256": "5c15e48e0048eda7705cf1d44aa6aeda2992871e713369cc91a0f141265aa466",
+      "inspected_files": [
+        "Set Destinations and load presets.json",
+        "Set Destinations and load presets.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/offshoot-helper/set-window-layout.md",
+      "bytes": 9322,
+      "sha256": "f182636c69c9da01170657608303ad71be784a46bab34ab65727b6a6306e80e4",
+      "inspected_files": [
+        "Setup-Hedge-and-Finder.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/transfer-report.md",
+      "bytes": 105972,
+      "sha256": "cc78826bb8fb415613ce80bc052d7b486503e0ca95c1a562d14697a2aea0e72a",
+      "inspected_files": [
+        "Transfer Report generator.scpt",
+        "Transfer Report generator.app/Contents/Resources/Scripts/main.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/move-transfer-log-into-source-folder.md",
+      "bytes": 19208,
+      "sha256": "dd8f0614ef600d33101938edbd0a931b0410b966d399ffe4ac9d2990330b03cf",
+      "inspected_files": [
+        "3884d4d5520f.download"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/move-pdf-reports-into-destination-folder.md",
+      "bytes": 10897,
+      "sha256": "1bb84616a7e01bf6057cc9ef04ea7ebd154eac3dd83dd8ecb5b468d1036755aa",
+      "inspected_files": [
+        "Move Foolcat PDF reports.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/auto-set-destinations.md",
+      "bytes": 5640,
+      "sha256": "8098862d14d013dbd7d5020f861d8c52c89decbaa14c751a49d12eac5280d942",
+      "inspected_files": [
+        "Auto set destinations on Hedge start.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/auto-set-preferences.md",
+      "bytes": 7443,
+      "sha256": "56c97d316020492bf12321769866498a9b29e1dd5c5e79a73c9d0fa9175c94c0",
+      "inspected_files": [
+        "Auto set preferences on Hedge start.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/automated-transfers.md",
+      "bytes": 11696,
+      "sha256": "7f15899331e11a6435c69d6a66417b51fec75165ff222977334c2c1bd1260f49",
+      "inspected_files": [
+        "Automated_Hedge_Transfer.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/delete-mhl-file.md",
+      "bytes": 5735,
+      "sha256": "076c836704de1f44df354d49c29b03b7e37a1adb6b95c089f20d092b4b1bd828",
+      "inspected_files": [
+        "delete mhl.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/send-a-notification-to-slack.md",
+      "bytes": 4487,
+      "sha256": "adb3c75696dd6d6164e70cab43f7a7fd69f0eed92a8f85157e575b9e6a6da81d",
+      "inspected_files": [
+        "Hedge to Slack.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/email-notifications.md",
+      "bytes": 5786,
+      "sha256": "8a58774ce96c767e0def192f6f5bde5a5b7d2680ca716c3b478f2c95a444c7aa",
+      "inspected_files": [
+        "OffShoot-send-email-script.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/zcam-vid-stitch.md",
+      "bytes": 45040,
+      "sha256": "6767e8be42b93e6d86b86c7a67fd4d3b64d5dec3456838e729e01a9cf2977131",
+      "inspected_files": [
+        "1820f62257c5.download"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/cascading-copy.md",
+      "bytes": 14025,
+      "sha256": "b780f145dec038f4019a3ae82413252fc52fc6b9bd05608f404cc9c5cd40c352",
+      "inspected_files": [
+        "Cascade transfer with Hedge.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/set-finder-tags.md",
+      "bytes": 4722,
+      "sha256": "e2623148703c091a7c927db8df5add0e97d610b464e987689bf56d9bac5f5d8d",
+      "inspected_files": [
+        "Mark source as processed.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/watch-folders.md",
+      "bytes": 66314,
+      "sha256": "49adde102e370c5bcb05eba8ae6d14ecb3a953caf01f69aa94c68a5decdd266b",
+      "inspected_files": [
+        "watchfolder-1.01.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/automation/examples/watch-folders.md",
+      "bytes": 66322,
+      "sha256": "0a8a4cf9111b471a59099fdb06c35f0bacbab21a61c3b910652130d9b887a81d",
+      "inspected_files": [
+        "watchfolder-1.0.scpt"
+      ]
+    },
+    {
+      "page": "https://docs.hedge.video/offshoot/features/elements.md",
+      "bytes": 1534,
+      "sha256": "e8f00629aed028feecec9984614e679349d7abfdcb3ce94b43772e509cc1c45c",
+      "inspected_files": [
+        "Production_X_CAM_A.hedge"
+      ]
+    }
+  ]
+}

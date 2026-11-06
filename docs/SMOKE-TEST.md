@@ -1,0 +1,20 @@
+# First field-laptop smoke test
+
+Use your own short video with speech, a visible person and two visibly different moments. Make a disposable copy in a new test project outside real ingests. Do not use licensed demo media or import another person's labels. Record actual commands, duration, platform and outcomes in a local report; exclude that report's media paths and identity data from Git.
+
+1. Check the installed release and `prepare-offline --check` with its own interpreter. All required models, search assets, built UI and native app must be present. A merely downloaded model is insufficient if the runtime cannot load it.
+2. Process the test clip with the installed `dit_notes.py process INPUT --project PROJECT` command. Serve that project on an unused local port, then open its browser UI. Check playback, complete timestamped transcript, concise visual notes and local search. Sparse stills may miss appearances; do not treat a no-match as proof of absence.
+3. Save a distinct test note and, if detected, a face/voice name through the UI. Stop and restart the service, reopen the same project and confirm those exact edits persist. Do not copy these labels into a real project.
+4. Start processing a second disposable clip, interrupt the AI process cleanly, then restart/reconcile. Confirm work completes without duplicate records or lost edits. A separate SIGKILL disaster test belongs in a temporary test home; never kill a real OffShoot transfer.
+5. Disable internet access after preparation. Repeat local readiness and a short own-media process/search/chat request. Record what was actually exercised, and restore connectivity if desired. Do not change system network settings without the operator's direction.
+6. Attach a test card and transfer a small set through OffShoot. Confirm its selected destination, complete-card hierarchy, verification mode and counter before starting. Confirm OffShoot reports a successful source-and-destination verification and writes a supported successful transfer receipt. Confirm the AI queue has one corresponding job, the job completes and its footage opens in the library. Check originals have not been renamed or modified.
+7. Restart once more and confirm that completed work is reused and the queue reconciles. Test a duplicate receipt in the isolated automated test harness, not by editing a real receipt.
+8. Confirm no CCC task was changed. Retain the source card. Verify a second independent copy and play/check footage before authorizing card reuse.
+
+Keep separate results for software tests, local model inference, UI persistence, offline use and the physical OffShoot transfer. If the ingest drive or test card is unavailable, report those checks as deferred; the install is not a validated field ingest until they pass.
+
+## Failure scenarios
+
+The automated deployment suite must exercise: interrupted staging, partial/tampered download, archive path escape, missing offline files, failed preparation, concurrent update attempts, source/config symlink hazards, activation failure, rollback and preservation of existing `current`, shared data and project metadata. Run in temporary directories. A passing suite does not imply a power-loss test on the destination filesystem.
+
+If installation fails before activation, the previous release must remain current. If the Mac loses power around activation, inspect the current/previous pointers and readiness before restarting. Do not guess a release path, delete lock files to bypass a live update, discard a queue or overwrite a metadata database.

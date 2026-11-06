@@ -1,0 +1,1 @@
+{"name":"ai-indexer-lab-shared-search","private":true,"type":"module","dependencies":{"@orama/orama":"3.1.18"},"scripts":{"test":"node test_projection.mjs"}}

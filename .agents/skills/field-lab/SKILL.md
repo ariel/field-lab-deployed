@@ -1,0 +1,20 @@
+---
+name: field-lab
+description: Install, update, check, or recover the local Field Lab OffShoot and AI indexing workflow on an Apple Silicon Mac. Use when managing this repository's deployment, including offline field updates. CCC configuration is a separate explicitly requested operation.
+---
+
+Use the repository scripts rather than rebuilding the procedure in shell. Locate the repository by walking three parents up from this skill folder. Read its `AGENTS.md`, `docs/OPERATIONS.md`, then only the matching prompt under `docs/prompts/`.
+
+For a first install, use `docs/prompts/FIRST-INSTALL.md`. For an existing installation, use `docs/prompts/FIELD-UPDATE.md`. The public entry point is `bash deploy/bootstrap.sh`; it obtains the pinned Python and invokes `deploy/field.py`. Run `--help` or `status` before mutations if flags are uncertain. Installed state defaults to `~/Library/Application Support/Field Lab`; source checkout and installed releases are separate.
+
+An install/update request authorizes downloading dependencies and preparing a candidate. Activate when the requested scope includes deployment and OffShoot is confirmed to have no active or queued transfers; record that confirmation using `--offshoot-idle`. This flag asserts observed/operator-confirmed state, it does not discover idle state. If idle cannot be established, finish candidate preparation and report the remaining switch step. Do not treat an elapsed timeout as idle. Use `--interrupt-ai` only if the operator wants an unfinished AI run interrupted; startup reconciles its backlog.
+
+Choose an explicitly identified mounted destination on first configuration; do not copy developer volume names or UUIDs. `configure` derives the mounted UUID. Configure OffShoot only after activation, using `configure-offshoot --offshoot-idle` and the app's Disks screen. It backs up the affected settings, sets verified copies and stable hooks, and changes OffShoot destinations. Ordinary updates do not rerun it. CCC stays untouched unless separately requested with a known second destination.
+
+Keep all source footage and `_DIT_NOTES` outside application releases. Never delete or reset project data, queues, names, matching feedback, or receipts to fix an installation. Do not import demo media or seeded identities. Do not run `git pull` inside an active release. Fetch/check out an operator-approved tag or commit in the source checkout, prepare it separately, and switch using the manager. Never claim Git tag authenticity merely from a locally calculated checksum.
+
+Before switching, the scripts check pinned asset integrity and offline readiness. After switching, use `docs/SMOKE-TEST.md` with an operator-selected disposable clip and check `doctor`; a ready manifest alone does not prove model inference or an actual OffShoot transfer. Record what was actually tested. A failed preparation leaves current running code intact. Rollback selects prior code; it does not downgrade project databases. Preserve pre-update backups and stop if a schema downgrade is uncertain.
+
+Report active version, configuration location, offline readiness, smoke-test coverage, remaining backlog/errors, and whether OffShoot/CCC were changed. Do not promise universal codec or camera-card support from a synthetic test.
+
+For a prompt, model or UI upgrade, read `docs/UPGRADES.md`. Run `reindex --project PROJECT` to plan registered-scope work; the plan does not clear an index. Run with `--run --offshoot-idle` only when reanalysis is requested and the AI service is stopped. A UI-only update should reuse AI outputs. After a server/UI update, reopen or reload the browser; built assets and responses have cache-safe URLs/headers. Use `verify-offshoot` for preference/preset readback after integration changes. For separately requested CCC setup read `docs/CCC-SETUP.md`; `ccc-status` is read-only, task creation uses supported CCC UI rather than undocumented preference writes.

@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "volume_uuid": "CHOOSE_MOUNTED_VOLUME",
+  "volume_mount": "/Volumes/Your Media Drive",
+  "ingest_folder": "Ingests",
+  "ingest_root": "/Volumes/Your Media Drive/Ingests",
+  "port": 8766,
+  "features": {
+    "automatic_face_grouping": true,
+    "automatic_voice_grouping": true,
+    "automatic_note_inheritance": true,
+    "face_named_match_threshold": 0.72,
+    "identity_match_margin": 0.08
+  }
+}
