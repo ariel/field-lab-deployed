@@ -8,6 +8,9 @@ from ditnotes.face_policy import POLICY_ID
 
 class FaceGroupingPolicy(unittest.TestCase):
  def setUp(self):
+  # Single-process disposable policy fixtures may use the CI host's SQLite.
+  # Production version gating is exercised separately and by pinned-runtime tests.
+  safety=patch('ditnotes.sqlite_safety.require_safe_sqlite');safety.start();self.addCleanup(safety.stop)
   self.tmp=tempfile.TemporaryDirectory();self.path=Path(self.tmp.name)/'registry.sqlite3';self.store=ProjectStore(self.path,'fixture');self.number=0
  def tearDown(self):self.store.close();self.tmp.cleanup()
  def vector(self,degrees):return [math.cos(math.radians(degrees)),math.sin(math.radians(degrees))]
