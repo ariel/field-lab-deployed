@@ -8,12 +8,11 @@ import json
 import os
 import re
 from pathlib import Path
-import shutil
-import tempfile
 from urllib.parse import quote
 import uuid
 
 from .engine import Engine
+from .scratch import scratch_directory
 
 NOTES='_DIT_NOTES'
 MEDIA_EXTENSIONS={'.mp4','.mov','.m4v','.mxf','.mts','.m2ts','.mkv','.avi','.webm','.3gp','.wav','.wave','.flac','.aif','.aiff','.mp3','.m4a','.ogg','.opus','.aac','.caf','.wma','.mka'}
@@ -341,8 +340,8 @@ def process(input_path,project=None,*,models_root=None,engine=None,options=None,
                     if _valid_object(target,sha,profile):counts['reused']+=1
                     else:
                         work_root=notes/'.work';work_root.mkdir(exist_ok=True)
-                        temporary=Path(tempfile.mkdtemp(prefix='analyze-',dir=work_root))
-                        try:
+                        with scratch_directory(prefix='analyze-',dir=work_root) as scratch:
+                            temporary=Path(scratch)
                             emit('analysis',current=relative)
                             if hasattr(engine,'progress_callback'):engine.progress_callback=lambda stage:emit(stage,current=relative)
                             engine.analyze(path,temporary)
@@ -358,8 +357,6 @@ def process(input_path,project=None,*,models_root=None,engine=None,options=None,
                                 target.replace(quarantine/(sha+'-'+profile+'-'+uuid.uuid4().hex))
                                 fsync_dir(quarantine);fsync_dir(target.parent)
                             temporary.replace(target);fsync_dir(target.parent);counts['processed']+=1
-                        finally:
-                            if temporary.exists():shutil.rmtree(temporary)
                     if _stat(path)!=before:raise RuntimeError('Source changed before catalog update; retry')
                     current_stage='registration'
                     from .enrichment import register_result
