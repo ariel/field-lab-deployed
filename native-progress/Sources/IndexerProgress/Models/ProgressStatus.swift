@@ -22,6 +22,7 @@ struct ProgressStatus: Decodable {
     var code: String { stage ?? phase ?? "waiting" }
     var label: String {
         switch code {
+        case "waiting_for_project": return "Waiting for project"
         case "warming": return "Preparing models"
         case "faces": return "Finding faces"
         case "analysis": return "Analyzing audio and images"

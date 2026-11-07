@@ -99,13 +99,14 @@ def main(argv=None):
         from ditnotes.server import serve
         serve(args.project,args.port,tool_root=ROOT);return 0
     from ditnotes.library import process
-    result=process(args.input,args.project,models_root=args.models_root,
+    from ditnotes.project_retry import retry_project
+    result=retry_project(lambda:process(args.input,args.project,models_root=args.models_root,
                    options={'interval':args.interval,'max_frames':args.max_frames,'timeout':args.timeout},
-                   progress=lambda path,status:print(f'{path}: {status}',file=sys.stderr,flush=True))
+                   progress=lambda path,status:print(f'{path}: {status}',file=sys.stderr,flush=True)))
     from ditnotes.search_backend import SearchBackend
     from ditnotes.enrichment import publish_index
     backend=SearchBackend(ROOT,lambda x:None)
-    try:result['index']=publish_index(Path(result['project']),backend)
+    try:result['index']=retry_project(lambda:publish_index(Path(result['project']),backend))
     finally:backend.close()
     print(json.dumps(result,indent=2));return 1 if result['counts']['failed'] else 0
 

@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 os.environ.update(PATH=str(ROOT/'bin')+':/usr/bin:/bin:/usr/sbin:/sbin',HF_HUB_OFFLINE='1',TRANSFORMERS_OFFLINE='1',HF_DATASETS_OFFLINE='1',TOKENIZERS_PARALLELISM='false',PYTHONNOUSERSITE='1')
 from ditnotes.atomic import atomic_json,fsync_dir
+from ditnotes.project_retry import retry_project,is_project_busy
 from ditnotes.native_progress import ProgressState,open_progress
 from ditnotes.ingest_events import enqueue,validate_event,mac_volume_info,RejectedEvent
 
@@ -103,7 +104,7 @@ class Controller:
             except Exception as e:
                 with connect(self.c) as db:db.execute("UPDATE jobs SET state='error',last_error=? WHERE job_id=?",(str(e),row['job_id']))
         if scopes:
-            result=reconcile(self.project,input_paths=scopes,models_root=ROOT/'models')
+            result=self.project_call(lambda:reconcile(self.project,input_paths=scopes,models_root=ROOT/'models'))
             for relative in result['pending']:
                 for row in rows:
                     if row['job_id'] not in valid_ids:continue
@@ -122,6 +123,21 @@ class Controller:
                 unknown.extend(str(p.relative_to(self.project)) for p in day.iterdir() if p.is_dir() and not p.is_symlink() and p not in known)
         self.unverified=sorted(unknown)
         if unknown:self.error=f'{len(unknown)} ingest folder(s) need OffShoot verification before AI processing'
+    def waiting_for_project(self):
+        self.native_progress.update(stage='waiting_for_project')
+        self.publish('waiting_for_project',self.native_progress.snapshot().get('current'))
+    def project_call(self,call):
+        return retry_project(call,stop_event=self.stop,on_wait=self.waiting_for_project)
+    def reconcile_until_ready(self):
+        while not self.stop.is_set():
+            try:self.reconcile();return
+            except Exception as error:
+                if not is_project_busy(error):raise
+                self.waiting_for_project();self.stop.wait(1)
+        raise KeyboardInterrupt('Processing interrupted; resume next session')
+    def requeue(self,job_id):
+        with connect(self.c) as db:
+            db.execute("UPDATE jobs SET state='pending',last_error=NULL,claimed_at=NULL,finished_at=NULL WHERE job_id=?",(job_id,))
     def progress_event(self,event):
         if self.stop.is_set():raise KeyboardInterrupt('Processing interrupted; resume next session')
         self.native_progress.update(**event)
@@ -138,7 +154,7 @@ class Controller:
         warming=warmer.submit(self.engine.prewarm)
         try:
             self.native_progress.begin();self.native_progress.update(stage='reconciling')
-            self.reconcile();self.native_progress.update(stage='idle',current=None);self.publish('ready',error=self.error)
+            self.reconcile_until_ready();self.native_progress.update(stage='idle',current=None);self.publish('ready',error=self.error)
             # Spawn model loaders without waiting; preparation/copying can proceed.
             # Representative model forwards run in background while reconciliation proceeds.
             last_receipt_scan=0.0
@@ -148,7 +164,7 @@ class Controller:
                     recover(self.c,ROOT);last_receipt_scan=time.monotonic()
                 request=ROOT/'runtime/reconcile.request'
                 if request.exists():
-                    self.publish('starting');self.reconcile();request.unlink();fsync_dir(request.parent);self.publish('ready',error=self.error)
+                    self.publish('starting');self.reconcile_until_ready();request.unlink();fsync_dir(request.parent);self.publish('ready',error=self.error)
                 with connect(self.c) as db:
                     db.execute('BEGIN IMMEDIATE');row=db.execute("SELECT * FROM jobs WHERE state='pending' ORDER BY enqueued_at LIMIT 1").fetchone()
                     if row:db.execute("UPDATE jobs SET state='processing',attempts=attempts+1,claimed_at=? WHERE job_id=?",(time.time(),row['job_id']))
@@ -163,7 +179,7 @@ class Controller:
                     self.native_progress.begin(str(Path(job['destination']).relative_to(self.project)))
                     self.publish('processing',str(Path(job['destination']).relative_to(self.project)))
                     awake=subprocess.Popen(['/usr/bin/caffeinate','-i','-w',str(os.getpid())],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-                    result=process(job['destination'],self.project,models_root=ROOT/'models',engine=self.engine,progress=self.progress,progress_event=self.progress_event)
+                    result=self.project_call(lambda:process(job['destination'],self.project,models_root=ROOT/'models',engine=self.engine,progress=self.progress,progress_event=self.progress_event))
                     if result['counts']['failed']:raise RuntimeError(f'{result["counts"]["failed"]} media file(s) failed; completed files are retained')
                     self.progress_event({'stage':'indexing','current':None})
                     self.snapshot()
@@ -171,7 +187,13 @@ class Controller:
                     with connect(self.c) as db:db.execute("UPDATE jobs SET state='done',last_error=NULL,finished_at=? WHERE job_id=?",(time.time(),row['job_id']))
                     self.unverified=[p for p in self.unverified if p!=str(Path(job['destination']).relative_to(self.project))]
                     self.publish('ready')
+                except KeyboardInterrupt:
+                    self.requeue(row['job_id'])
+                    raise
                 except Exception as e:
+                    if is_project_busy(e):
+                        self.requeue(row['job_id']);self.waiting_for_project();self.stop.wait(1)
+                        continue
                     with connect(self.c) as db:db.execute("UPDATE jobs SET state='error',last_error=? WHERE job_id=?",(str(e),row['job_id']))
                     self.native_progress.update(stage='failed',current=self.native_progress.snapshot().get('current'))
                     self.publish('error',error=str(e))

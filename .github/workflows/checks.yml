@@ -31,6 +31,8 @@ jobs:
           assert len(pins) == len(wanted), 'Missing model-routing test dependency pin'
           subprocess.check_call([sys.executable, '-m', 'pip', 'install', *pins])
           PYTHON
+      - run: python -m unittest discover -s tests -p 'test_controller_contention.py' -v
+      - run: python -m unittest discover -s tests -p 'test_project_retry.py' -v
       - run: python -m unittest discover -s tests -p 'test_model_roles.py' -v
       - run: python -m unittest discover -s tests -p 'test_chat_model_routing.py' -v
       - run: python -m unittest discover -s tests -p 'test_chat_limits.py' -v

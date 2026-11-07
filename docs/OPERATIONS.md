@@ -99,6 +99,8 @@ Verify the second copy and check playable media before authorizing card reuse. A
 
 After a power loss or interruption, mount the configured drive and start the service. It reconciles sealed AI outputs with work still required. Completed clips are reused; pending clips resume. Unknown ingest folders need valid OffShoot verification evidence. Do not fabricate a success receipt to bypass that requirement.
 
+`Waiting for project` means another local writer currently holds the project lock. The browser remains available while the indexer waits. If a wait outlasts one retry window, the ingest job stays pending and retries automatically; it does not become a failed ingest. Completed clip analysis remains sealed and is reused if index publication must retry. Stopping the service interrupts this wait promptly and leaves the queue resumable.
+
 For an absent/replaced drive, inspect mount and UUID; reconnect the original volume or deliberately reconfigure for the replacement. For a full disk, leave originals and metadata in place, free unrelated storage and retry. For a download failure, leave the old release active and retry preparation when internet returns. For readiness/test failure, preserve the failed candidate and diagnostics and use the old release.
 
 A code rollback changes executable files, not model/queue/project data. If a new release changes database schemas or analysis formats, its release notes must state whether the old release can read them. Backup/restore decisions must account for operator edits made after the update. Do not restore an old project database automatically.
