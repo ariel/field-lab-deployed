@@ -15,7 +15,7 @@ This is an early deployment release. Supported target: **Apple Silicon, macOS 27
 Paste this single prompt into Codex on the Mac you want to set up:
 
 ```text
-Install the field-lab Codex skill from https://github.com/mattb/field-lab-deployed/tree/v0.1.0-alpha.5/.agents/skills/field-lab, then read its SKILL.md directly and start the first-time install process for that same release on this Mac. Continue in this turn rather than waiting for automatic skill discovery. OffShoot Pro and CCC are already installed.
+Install the field-lab Codex skill from https://github.com/mattb/field-lab-deployed/tree/v0.1.0-alpha.6/.agents/skills/field-lab, then read its SKILL.md directly and start the first-time install process for that same release on this Mac. Continue in this turn rather than waiting for automatic skill discovery. OffShoot Pro and CCC are already installed.
 ```
 
 This pins both the skill and application to the same tested release. Codex installs the skill, finds or clones the source checkout, checks the Mac, prepares the local software/models, and guides the drive configuration and acceptance tests. It asks for the ingest destination when the actual drive cannot be established from your session. No API key is needed. CCC task setup follows separately after the second physical drive is chosen.
@@ -33,6 +33,8 @@ bash deploy/bootstrap.sh install
 This prepares a candidate and prints its release ID. Activation, machine/drive configuration and OffShoot setup follow the operations guide. No application settings change merely from cloning or preparing. Field updates use a selected tag/commit, isolated preparation, integrity checks, a quiet-time switch and a previous release for rollback. Pending AI work resumes by reconciliation.
 
 Do the [smoke test](docs/SMOKE-TEST.md) on your own disposable footage and a test card before field use. A successful readiness check verifies assets, not every camera codec, macOS permission or physical transfer. AI search covers sampled stills and can miss appearances. Keep cards until the required independent backup and media checks pass.
+
+USB cameras that appear in Image Capture instead of as disks can optionally use [MacDroid as an OffShoot folder source](docs/MACDROID-INGEST.md). A MISSION 1 PRO folder was accepted and enumerated; a full verified transfer through this adapter is still pending, and Skydio X10 compatibility is untested. MacDroid is separately installed/licensed and may cache source data. See the procedure for the verification boundary and camera-specific acceptance checks.
 
 ## Development
 

@@ -61,4 +61,6 @@ The examples demonstrate mechanisms, not ready-made policies for this workflow:
 
 ## Acceptance on the recipient Mac
 
+Optional MTP/Image Capture camera sources can be presented as folders by MacDroid; see [setup, evidence and verification limits](MACDROID-INGEST.md). Use the same successful-receipt gate. Native CloudStorage folder arrival is not a guaranteed Disk Added event, and source verification through an adapter does not prove a fresh read from device storage. No MTP automation is installed by this integration.
+
 Show the configured source/destination, preset, counter, verification and callback settings. Perform a disposable verified transfer and check both transfer receipt and Event Log execution. Confirm a duplicate receipt yields one durable job; failed/warning/stopped and unsupported-schema fixtures must yield none. Interrupt AI on disposable footage, restart and confirm reconciliation. Confirm remounting a different disk with the same name is rejected by UUID. Confirm an OffShoot restart retains exactly the intended destination and does not start a transfer automatically. These checks supplement, rather than replace, `docs/SMOKE-TEST.md` and the separately chosen [CCC task acceptance](CCC-SETUP.md).

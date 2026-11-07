@@ -42,6 +42,8 @@ The candidate ID is a source-tree hash, distinct from the Git commit; record bot
 
 The optional [Desktop apps](DESKTOP.md) provide double-click entry points for ingest, library, native progress and stopping AI. They keep their paths across release switches.
 
+For Image Capture/MTP devices without a mounted filesystem, see [MacDroid ingestion](MACDROID-INGEST.md). The adapter supplies an optional folder source to OffShoot; the verified physical destination, receipt gate, AI service and separately configured CCC remain the same. Native CloudStorage caching limits claims about independent camera rereading. This is not an automatic camera importer or a substitute for the adapter's physical acceptance test.
+
 ## What persists
 
 The source checkout can be anywhere outside a media project. The installed application uses this layout by default:

@@ -13,6 +13,8 @@ Use your own short video with speech, a visible person and two visibly different
 
 Keep separate results for software tests, local model inference, UI persistence, offline use and the physical OffShoot transfer. If the ingest drive or test card is unavailable, report those checks as deferred; the install is not a validated field ingest until they pass.
 
+If using a MacDroid/MTP camera source, also run the [adapter acceptance checks](MACDROID-INGEST.md#acceptance-before-field-use), including an uncached interrupted download and receipt/queue verification. A card-reader test does not validate this path, and a source reread through MacDroid may use its cache.
+
 ## Failure scenarios
 
 The automated deployment suite must exercise: interrupted staging, partial/tampered download, archive path escape, missing offline files, failed preparation, concurrent update attempts, source/config symlink hazards, activation failure, rollback and preservation of existing `current`, shared data and project metadata. Run in temporary directories. A passing suite does not imply a power-loss test on the destination filesystem.
