@@ -6,6 +6,7 @@ A deployment release ID identifies the entire installed software tree. An **anal
 | --- | --- | --- |
 | `viewer/src/` React, CSS or Markdown rendering | Reuse | Build and deploy the new UI; reload the browser |
 | Browser runtime, Node, text/CLIP search models or reranker | Reuse | Prepare assets and refresh the search index when needed |
+| Chat-only Qwen3.8-27B weights, role pin or chat prompt | Reuse | Prepare the chat checkpoint and deploy; new chat turns use it |
 | `ditnotes/prompts/field-caption.txt` or inference code in `engine.py` | New profile | Reanalyze selected registered scopes, then publish search |
 | ASR/VLM/diarization/speaker/face model weights, configs or identity model manifests | New profile | Reanalyze selected registered scopes, then publish search |
 | Python dependency lock, Python runtime or FFmpeg decoder source pin | New profile | Reanalyze selected registered scopes; this deliberately treats any Python lock change conservatively |
@@ -14,7 +15,7 @@ A deployment release ID identifies the entire installed software tree. An **anal
 
 Managed releases use the pinned SHA256 values for inference models. Their modification times and model-generation directory names do not affect analysis reuse. Changing a browser-only asset can create a new model generation for deployment while retaining the same analysis profile. Bootstrap verifies the actual model files against those pins; the profile calculation uses those verified pins without rereading gigabytes of weights for every planning call. Do not manually change installed models or edit an active release. Legacy standalone prototypes without a deployment lock retain their older conservative mtime-based rule.
 
-The entire Python dependency lock, pinned Python runtime and FFmpeg decoder source are included conservatively. Even a Python dependency used only by chat can therefore invalidate analysis when that lock changes. Node, browser and React changes remain separate. When changing other inference behavior, the maintainer must update a tracked analysis input or explicitly version the profile. Keep release notes clear about whether an upgrade changes analysis, search, database compatibility or presentation.
+The entire Python dependency lock, pinned Python runtime and FFmpeg decoder source are included conservatively. Even a Python dependency used only by chat can therefore invalidate analysis when that lock changes. Node, browser, React and chat-only model-weight changes remain separate. The ingest profile explicitly includes its own model families and excludes the 27B chat checkpoint. When changing other inference behavior, the maintainer must update a tracked analysis input or explicitly version the profile. Keep release notes clear about whether an upgrade changes analysis, search, database compatibility or presentation.
 
 ## Maintainer workflow
 
@@ -34,7 +35,7 @@ bash deploy/bootstrap.sh stop
 bash deploy/bootstrap.sh reindex --project "/Volumes/YOUR DRIVE/Ingests"
 ```
 
-The default `reindex` command is a read-only plan. It shows the analysis profile, registered scopes and each file's `analyze` or `reuse` action. It refuses projects with no registered ingest scopes. It does not authorize unknown folders or fabricate OffShoot verification evidence. The managed command requires the AI service to be stopped, including for planning, and serializes against release changes.
+The default `reindex` command is a read-only plan. It shows the analysis profile, registered scopes and each file's `analyze` or `reuse` action. It refuses projects with no registered ingest scopes. It does not authorize unknown folders or fabricate OffShoot verification evidence. The plan serializes against release changes and can run while the service is active. Execution requires the AI service to be stopped.
 
 A UI-only upgrade should show `analyze: 0` for clips that already have valid completed objects under the same analysis options. Pending clips, missing/corrupt objects or earlier analysis changes can still produce work; inspect the rows instead of assuming every pending item was caused by the UI change. A prompt upgrade should show the affected clips as `analyze` under a new profile.
 

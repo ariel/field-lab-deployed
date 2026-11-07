@@ -6,16 +6,16 @@ Offline media indexing for a filmmaker doing camera and data wrangling alone.
 
 OffShoot retains complete cards and verifies each copy. Field Lab queues verified ingests and adds full timestamped transcripts, brief visual notes, searchable stills, face/voice grouping and operator notes. A local browser provides search, identity review and chat with links to footage. Originals stay untouched; generated output and durable operator edits live in each project's `_DIT_NOTES` folder.
 
-Parakeet, Qwen, embeddings and reranking run locally using MLX; face detection/embedding uses OpenCV. Text and image retrieval share the Orama architecture. No cloud inference key is required. Model weights are downloaded from pinned upstream revisions and checked; **no footage, weights, saved chats, identities or project metadata are included here**. Third-party model and dependency licenses remain their own.
+Qwen3.5-4B handles fast ingest visual notes; Qwen3.8-27B handles agentic chat, tool planning and image inspection. Parakeet, both Qwen models, embeddings and reranking run locally using MLX; face detection/embedding uses OpenCV. Text and image retrieval share the Orama architecture. No cloud inference key is required. Model weights are downloaded from pinned upstream revisions and checked; **no footage, weights, saved chats, identities or project metadata are included here**. Third-party model and dependency licenses remain their own. See [model roles and offline preparation](docs/MODELS.md).
 
-This is an early deployment release. Supported target: **Apple Silicon, macOS 27+, Xcode Command Line Tools**, OffShoot Pro 26.3+. First installation requires internet and enough space for models, caches, dependencies and source builds; allow at least 25 GB free. Older operating systems have not been validated. OffShoot/CCC licenses are purchased separately. CCC is configured separately after explicitly choosing the second drive.
+This is an early deployment release. Supported target: **Apple Silicon, macOS 27+, Xcode Command Line Tools**, OffShoot Pro 26.3+. First installation requires internet and enough space for models, caches, dependencies and source builds; allow at least 65 GB free. Older operating systems have not been validated. OffShoot/CCC licenses are purchased separately. CCC is configured separately after explicitly choosing the second drive.
 
 ## Install with Codex
 
 Paste this single prompt into Codex on the Mac you want to set up:
 
 ```text
-Install the field-lab Codex skill from https://github.com/mattb/field-lab-deployed/tree/v0.1.0-alpha.1/.agents/skills/field-lab, then read its SKILL.md directly and start the first-time install process for that same release on this Mac. Continue in this turn rather than waiting for automatic skill discovery. OffShoot Pro and CCC are already installed.
+Install the field-lab Codex skill from https://github.com/mattb/field-lab-deployed/tree/v0.1.0-alpha.2/.agents/skills/field-lab, then read its SKILL.md directly and start the first-time install process for that same release on this Mac. Continue in this turn rather than waiting for automatic skill discovery. OffShoot Pro and CCC are already installed.
 ```
 
 This pins both the skill and application to the same tested release. Codex installs the skill, finds or clones the source checkout, checks the Mac, prepares the local software/models, and guides the drive configuration and acceptance tests. It asks for the ingest destination when the actual drive cannot be established from your session. No API key is needed. CCC task setup follows separately after the second physical drive is chosen.

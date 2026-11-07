@@ -7,9 +7,8 @@ from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parent
 os.environ['PATH']=str(ROOT/'bin')+':'+os.environ.get('PATH','/usr/bin:/bin')
-MODEL_LOCK={
- 'parakeet':('mlx-community/parakeet-tdt-0.6b-v3','ed2b7e8c15f9aaa0b5772e2efb986255eaef7e15'),
- 'Qwen3.5-4B-4bit':('mlx-community/Qwen3.5-4B-4bit','0e7ffd5c629ef7719d4cbc04069232580bfa9d9c')}
+from ditnotes.model_roles import MODEL_LOCK, MODEL_ROLES, ANALYSIS_MODELS, CHAT_MODEL
+
 
 
 def _weight_complete(path):
@@ -56,7 +55,11 @@ def prepare_offline(check_only=False):
             if item['ready']:continue
             repo,revision=MODEL_LOCK[name]
             print('Preparing local model:',name,flush=True)
-            snapshot_download(repo,revision=revision,local_dir=ROOT/'models'/name,max_workers=1)
+            lock=json.loads((ROOT/'deploy/assets.lock.json').read_text())
+            prefix=name+'/'
+            allowed=[row['path'][len(prefix):] for row in lock['model_files'] if row['path'].startswith(prefix) and not row.get('generated')]
+            if not allowed:raise RuntimeError('Missing pinned model download inventory: '+name)
+            snapshot_download(repo,revision=revision,local_dir=ROOT/'models'/name,max_workers=1,allow_patterns=allowed)
             (ROOT/'models'/name/'provenance.json').write_text(json.dumps({'repo':repo,'revision':revision},indent=2)+'\n')
         status=model_readiness(ROOT)
         search=prepare_search.prepare(ROOT)
@@ -70,7 +73,7 @@ def prepare_offline(check_only=False):
     native=(ROOT/'ditnotes/native/feature_select').is_file() and os.access(ROOT/'ditnotes/native/feature_select',os.X_OK)
     viewer=(ROOT/'viewer/dist/index.html').is_file()
     result={'ready':sqlite_status['ready'] and all(m['ready'] for m in status.values()) and search['ready'] and mlx_text['ready'] and mlx_clip['ready'] and native and viewer and voice['ready'] and face['ready'],
-            'sqlite':sqlite_status,'identities':{'voice':voice,'face':face},'analysis_models':status,'search':search,'mlx_search':{'text':mlx_text,'clip':mlx_clip},'native_selector_ready':native,'viewer_ready':viewer,
+            'sqlite':sqlite_status,'identities':{'voice':voice,'face':face},'analysis_models':{name:status[name] for name in ANALYSIS_MODELS},'chat_models':{CHAT_MODEL:status[CHAT_MODEL]},'model_roles':MODEL_ROLES,'search':search,'mlx_search':{'text':mlx_text,'clip':mlx_clip},'native_selector_ready':native,'viewer_ready':viewer,
             'note':'File completeness checked; run a test clip to validate inference on this Mac.'}
     if not check_only:
         from ditnotes.library import _save

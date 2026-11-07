@@ -2,7 +2,7 @@
 
 Field Lab runs locally on an Apple Silicon Mac. OffShoot Pro copies and verifies complete cards; Field Lab queues and indexes only verified ingests; CCC can later copy the media and `_DIT_NOTES` to a second drive. This repository includes no footage, face/voice labels, project database or prebuilt dataset. Use your own media for smoke tests.
 
-First installation needs internet and significant free storage for models and build tools. The currently supported deployment target is Apple Silicon with macOS 27 or later, plus Xcode Command Line Tools (including Swift). Install and activate OffShoot Pro 26.3 or later separately. Install CCC separately if it will be used. The installer does not purchase apps or licenses. Older Macs/macOS versions have not been validated by this deployment.
+First installation needs internet and at least 65 GB free for model downloads, installed generations, caches and build tools. [Model roles](MODELS.md) keep Qwen3.5-4B on the ingest path and load Qwen3.8-27B for agentic chat. The currently supported deployment target is Apple Silicon with macOS 27 or later, plus Xcode Command Line Tools (including Swift). Install and activate OffShoot Pro 26.3 or later separately. Install CCC separately if it will be used. The installer does not purchase apps or licenses. Older Macs/macOS versions have not been validated by this deployment.
 
 Use the copy/paste [first-install prompt](prompts/FIRST-INSTALL.md) or [field-update prompt](prompts/FIELD-UPDATE.md) in Codex. They ask Codex to inspect the actual machine and run the checked-in scripts rather than infer settings from a development machine.
 
