@@ -117,7 +117,7 @@ def _links(project,catalog,payload,store,revision):
                     if link['from_content']==best[0]:store.accept_link(link['id'],automatic=True);inherited+=1
     return count,inherited
 
-def _publish(project,backend):
+def _publish(project,backend,projection_only=False):
     from .library import _lock,_read
     project=Path(project);notes=project/'_DIT_NOTES'
     with _lock(notes):
@@ -125,7 +125,7 @@ def _publish(project,backend):
         if not catalog:return {'ready':False,'reason':'No catalog yet'}
         with ProjectStore(migrate_store(project),project_id=catalog['project']['id']) as store:
             from .identity_grouping import regroup
-            grouping=regroup(store)
+            grouping={'face_merges':0,'voice_merges':0,'conflicts_skipped':0} if projection_only else regroup(store)
             # Capture one SQLite WAL read snapshot without blocking operator writes.
             store.db.execute('BEGIN')
             try:catalog['search_projection']=project_documents(catalog,store);edit_revision=store.edit_revision
@@ -136,7 +136,7 @@ def _publish(project,backend):
             snapshot=read_snapshot(project)
             if not snapshot or snapshot['catalog'].get('search_projection',{}).get('edit_revision')!=edit_revision:raise RuntimeError('Search snapshot failed edit revision verification')
             atomic_json(notes/'catalog.json',catalog)
-            links,inherited=_links(project,catalog,payload,store,ready['revision'])
+            links,inherited=(0,0) if projection_only else _links(project,catalog,payload,store,ready['revision'])
             if inherited:
                 store.db.execute('BEGIN')
                 try:catalog['search_projection']=project_documents(catalog,store);edit_revision=store.edit_revision
@@ -145,6 +145,6 @@ def _publish(project,backend):
             store.mark_indexed(edit_revision)
             return {'ready':True,'edit_revision':edit_revision,'indexed_edit_revision':store.indexed_edit_revision,'vectors':len(payload['vectors']),'suggestions':links,'grouping':grouping}
 
-def publish_index(project,backend):
+def publish_index(project,backend,*,projection_only=False):
     """Own dispatch to the existing serialized MLX executor; caller is non-executor thread."""
-    return backend.executor.submit(_publish,Path(project),backend).result(timeout=900)
+    return backend.executor.submit(_publish,Path(project),backend,projection_only).result(timeout=900)

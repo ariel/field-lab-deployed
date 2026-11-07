@@ -65,13 +65,19 @@ class FaceStoreMixin:
             centroid=unit([sum(v[i] for v in vectors) for i in range(dimension)])
             self.db.execute('INSERT INTO face_profiles VALUES(?,?,?,?,?)',(face_id,revision,dimension,_json(centroid),len(vectors)))
     def assign_face(self,content_id,seconds,embedding,model_revision,quality,*,bbox,frame_ref='',crop_ref='',detection_id='0',
-                    quality_components=None,min_quality=.7,match_threshold=.8,threshold=None,margin=.08,auto_assign=False,
-                    exclude_face_ids=(),observation_id=None,calibration_id=None,max_enrollments_per_face_per_clip=3):
+                    quality_components=None,min_quality=.7,match_threshold=None,threshold=None,margin=.08,auto_assign=False,
+                    exclude_face_ids=(),observation_id=None,calibration_id=None,max_enrollments_per_face_per_clip=3,min_member_similarity=None):
         from .project_store import _text,_json,unit
+        from .features import features
+        from .face_policy import POLICY_ID,face_members,complete_link
         content_id=_text(content_id,128);model_revision=_text(model_revision,1000);detection_id=_text(str(detection_id),200)
+        settings=features();default_threshold=match_threshold is None and threshold is None
+        if match_threshold is None:match_threshold=settings['face_match_threshold']
+        if min_member_similarity is None:min_member_similarity=settings['face_cluster_min_similarity']
         seconds=float(seconds);quality=float(quality);match_threshold=match_threshold if threshold is None else float(threshold)
         if not math.isfinite(seconds) or seconds<0 or not math.isfinite(quality) or not 0<=quality<=1:raise ValueError('Invalid face time or quality')
         if not -1<=match_threshold<=1 or not 0<=margin<=2:raise ValueError('Invalid face matching policy')
+        if not -1<=min_member_similarity<=1:raise ValueError('Invalid face member support floor')
         if not isinstance(bbox,(list,tuple)) or len(bbox)!=4:raise ValueError('Face bbox must be normalized x1,y1,x2,y2')
         bbox=[float(x) for x in bbox]
         if any(not math.isfinite(x) or x<0 or x>1 for x in bbox) or bbox[0]>=bbox[2] or bbox[1]>=bbox[3]:raise ValueError('Invalid normalized face bbox')
@@ -96,12 +102,21 @@ class FaceStoreMixin:
                 if row['id']==observation_id:continue
                 if frame_ref and row['frame_ref'] and frame_ref!=row['frame_ref']:continue
                 if row['detection_id']!=detection_id or json.loads(row['bbox'])!=bbox:excluded.add(self.canonical_face(row['face_id']))
-            clean=vector is not None and quality>=min_quality;candidates=[]
+            clean=vector is not None and quality>=min_quality;candidates=[];named_ids=set()
             if clean:
-                for row in self.db.execute('SELECT p.* FROM face_profiles p JOIN faces f ON p.face_id=f.id WHERE p.model_revision=? AND p.dimension=? AND f.merged_into IS NULL',(model_revision,dimension)):
+                for row in self.db.execute('SELECT p.*,f.name FROM face_profiles p JOIN faces f ON p.face_id=f.id WHERE p.model_revision=? AND p.dimension=? AND f.merged_into IS NULL',(model_revision,dimension)):
+                    if row['name']:named_ids.add(row['face_id'])
                     if row['face_id'] not in excluded:candidates.append({'face_id':row['face_id'],'cosine':sum(a*b for a,b in zip(vector,json.loads(row['centroid'])))})
                 candidates.sort(key=lambda x:(-x['cosine'],x['face_id']))
+            if default_threshold and candidates and candidates[0]['face_id'] in named_ids:
+                match_threshold=float(settings['face_named_match_threshold'])
+                if not -1<=match_threshold<=1:raise ValueError('Invalid named face matching threshold')
             strong=bool(candidates and candidates[0]['cosine']>=match_threshold and (len(candidates)<2 or candidates[0]['cosine']-candidates[1]['cosine']>=margin))
+            # A centroid can drift through a chain of individually close faces.
+            # Keep every clean stored observation as a cross-member safety bound.
+            if strong and auto_assign:
+                members=face_members(self,model_revision,dimension)
+                strong=complete_link([vector],members.get(candidates[0]['face_id'],[]),min_member_similarity)
             if old:face=self.canonical_face(old['face_id']);status='same_detection'
             elif clean and strong and auto_assign:face=candidates[0]['face_id'];status='matched'
             else:face=self._new_face();status='provisional' if clean else 'insufficient_evidence'
@@ -112,7 +127,7 @@ class FaceStoreMixin:
                 self.db.execute('UPDATE face_observations SET content_id=?,seconds=?,face_id=?,model_revision=?,dimension=?,embedding=?,bbox=?,frame_ref=?,crop_ref=?,detection_id=?,quality=?,quality_components=?,enrolled=?,status=?,candidates=? WHERE id=?',(*fields,observation_id))
             else:self.db.execute('INSERT INTO face_observations VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',(observation_id,*fields,time.time()))
             if enrolled:self._refresh_face_profiles(face)
-            self._audit('face_observed',{'observation_id':observation_id,'face_id':face,'status':status,'auto_assign':auto_assign,'policy':{'threshold':match_threshold,'margin':margin,'calibration_id':calibration_id},'quality_is_probability':False})
+            self._audit('face_observed',{'observation_id':observation_id,'face_id':face,'status':status,'auto_assign':auto_assign,'policy':{'threshold':match_threshold,'margin':margin,'member_floor':min_member_similarity,'calibration_id':calibration_id or POLICY_ID},'quality_is_probability':False})
             return self._face_observation(self.db.execute('SELECT * FROM face_observations WHERE id=?',(observation_id,)).fetchone())
     def _face_observation(self,row):
         result=dict(row)

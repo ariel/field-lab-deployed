@@ -87,6 +87,8 @@ def main(argv=None):
     process=commands.add_parser('process',help='Analyze one file or a folder; resume and recognize reorganized files')
     process.add_argument('input',type=Path);process.add_argument('--project',type=Path);process.add_argument('--models-root',type=Path,default=ROOT/'models')
     process.add_argument('--interval',type=float,default=2);process.add_argument('--max-frames',type=int,default=12);process.add_argument('--timeout',type=float,default=300)
+    face=commands.add_parser('tune-faces',help='Plan or apply face-only backfill and regrouping; retain audio/captions and operator edits')
+    face.add_argument('project',type=Path);face.add_argument('--run',action='store_true')
     serve=commands.add_parser('serve',help='Browse a processed project on localhost');serve.add_argument('project',type=Path);serve.add_argument('--port',type=int,default=8766)
     args=parser.parse_args(argv)
     if args.command=='prepare-offline':
@@ -98,6 +100,17 @@ def main(argv=None):
     if args.command=='serve':
         from ditnotes.server import serve
         serve(args.project,args.port,tool_root=ROOT);return 0
+    if args.command=='tune-faces':
+        from ditnotes.face_maintenance import plan,run
+        if not args.run:
+            result=plan(args.project);result.pop('frames',None);print(json.dumps(result,indent=2));return 0
+        from ditnotes.search_backend import SearchBackend
+        from ditnotes.enrichment import publish_index
+        from ditnotes.project_retry import retry_project
+        backend=SearchBackend(ROOT,lambda x:None)
+        try:result=retry_project(lambda:run(args.project,publisher=lambda project:retry_project(lambda:publish_index(project,backend,projection_only=True))))
+        finally:backend.close()
+        print(json.dumps(result,indent=2));return 0
     from ditnotes.library import process
     from ditnotes.project_retry import retry_project
     result=retry_project(lambda:process(args.input,args.project,models_root=args.models_root,

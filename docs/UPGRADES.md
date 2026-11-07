@@ -81,3 +81,7 @@ Owned analysis scratch now tolerates bounded macOS directory cleanup races. Pers
 The engine source change conservatively creates a new analysis profile even though model weights and prompts are unchanged. Inspect the reindex plan before processing an existing project with this release; retain old sealed results and all operator metadata. Do not remove an existing index to update.
 
 The explicit clip-face labeling helper accepts operator-confirmed content-ID/name mappings and applies them in one SQLite transaction. It does not infer names from filenames, assign voice names or bypass different-person, simultaneous-face or voice-link conflict guards. Projects and identity labels remain outside the repository.
+
+## Face policy updates
+
+See [face tuning and additive maintenance](FACE-TUNING.md). Use `tune-faces` to plan/apply face-only backfill and regrouping on existing sealed stills without rerunning audio or captions. This is explicit maintenance, not automatic installation behavior. Normal whole-analysis profile invalidation remains conservative.
