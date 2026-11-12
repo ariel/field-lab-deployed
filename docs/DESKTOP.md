@@ -17,7 +17,7 @@ Double-click an app in Finder:
 | **Field Lab AI Progress** | Starts/resumes AI and opens the native progress window. |
 | **Field Lab Stop AI** | Stops AI safely; pending work reconciles on the next start. It does not stop OffShoot or CCC. |
 
-Keep Field Lab Ingest open to be offered newly mounted cards. The picker lists mount paths, supports multiple selections and excludes the configured destination. Select **Skip** to leave OffShoot unchanged. Clicking the running launcher again keeps its current card history. Quit it from the Dock to stop watching. Setting sources may replace the current OffShoot source selection.
+Keep Field Lab Ingest open to be offered newly mounted cards. The picker lists mount paths, supports multiple selections and excludes the configured destination. Select **Skip** to leave OffShoot unchanged. Cards successfully added by Field Lab stay out of the picker across launcher restarts while OffShoot is still running. Field Lab clears that history for cards it sees unmount and when OffShoot restarts. If you remove a card manually from Sources, you can add it again directly in OffShoot. Quit it from the Dock to stop watching. Setting sources may replace the current OffShoot source selection.
 
 The apps use native AppleScript applets and native failure alerts. They do not open Terminal. Icons are obtained from the Mac's installed system resources; no OffShoot icon or proprietary application binary is redistributed. They are compiled and ad hoc signed on the recipient Mac, not shipped as notarized downloadable applications.
 
