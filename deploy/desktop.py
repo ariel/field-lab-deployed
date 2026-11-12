@@ -14,18 +14,33 @@ APPS={'Field Lab Ingest':('ingest','GenericHardDiskIcon.icns'),
       'Field Lab Library':('library','MovieFolderIcon.icns'),
       'Field Lab AI Progress':('progress','Clock.icns'),
       'Field Lab Stop AI':('stop','AlertStopIcon.icns')}
+INGEST_FILES = Path(__file__).resolve().parent
 SYSTEM_ICONS=Path('/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources')
 
 def script(home,command):
     if command not in {v[0] for v in APPS.values()}:raise ValueError('Unsupported Desktop action')
     shell=shlex.join([str(Path(home)/'run'),command])
+    if command == 'ingest':
+        properties = {
+            'launcherCommand': shell,
+            'pythonCommand': shlex.quote(str(Path(home)/'current/.venv/bin/python')) + ' -B',
+            'applicationHome': str(home),
+        }
+        header = ''.join(f'property {name} : {json.dumps(value, ensure_ascii=False)}\n'
+                         for name, value in properties.items())
+        return header + (INGEST_FILES/'ingest_cards.applescript').read_text()
     return 'try\n    do shell script '+json.dumps(shell,ensure_ascii=False)+'\non error errorMessage number errorNumber\n    display alert "Field Lab" message errorMessage as critical buttons {"OK"} default button "OK"\nend try\n'
 
 def compile_app(source,destination,title,command,icon,runner=subprocess.run):
-    runner(['/usr/bin/osacompile','-o',str(destination),str(source)],check=True,capture_output=True,text=True)
+    options = ['-s'] if command == 'ingest' else []
+    runner(['/usr/bin/osacompile', *options, '-o', str(destination), str(source)],
+           check=True, capture_output=True, text=True)
     info_path=destination/'Contents/Info.plist'
     with info_path.open('rb') as stream:info=plistlib.load(stream)
-    info.update(CFBundleIdentifier='local.fieldlab.desktop.'+command,CFBundleName=title,CFBundleDisplayName=title,LSUIElement=True)
+    info.update(CFBundleIdentifier='local.fieldlab.desktop.'+command,CFBundleName=title,CFBundleDisplayName=title,LSUIElement=command != 'ingest')
+    if command == 'ingest':
+        shutil.copyfile(INGEST_FILES/'ingest_cards.py', destination/'Contents/Resources/ingest_cards.py')
+        (destination/'Contents/Resources/Scripts/main.scpt').chmod(0o444)
     local_icon=SYSTEM_ICONS/icon
     if local_icon.is_file():
         shutil.copyfile(local_icon,destination/'Contents/Resources/FieldLab.icns');info['CFBundleIconFile']='FieldLab'
@@ -67,7 +82,8 @@ def install(home,desktop=None,compiler=compile_app):
                 if owned.get(path)!=target or not p.is_symlink() or os.readlink(p)!=target:
                     raise ValueError('Desktop item is not managed by Field Lab: '+path)
         inputs={title:script(home,command) for title,(command,_) in APPS.items()}
-        fingerprint=hashlib.sha256(json.dumps({'scripts':inputs,'installer':manager.digest(Path(__file__))},sort_keys=True).encode()).hexdigest()
+        fingerprint=hashlib.sha256(json.dumps({'scripts':inputs,'installer':manager.digest(Path(__file__)),
+                                               'ingest_helper':manager.digest(INGEST_FILES/'ingest_cards.py')},sort_keys=True).encode()).hexdigest()
         generation=generations/fingerprint
         if generation.exists():
             if generation.is_symlink():raise ValueError('Desktop generation cannot be a symlink')
