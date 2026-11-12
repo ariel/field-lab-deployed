@@ -71,3 +71,36 @@ class IngestCardsTests(unittest.TestCase):
                 inspect_candidate=lambda path, _: self.record(path),
             )
         api.assert_called_once()
+
+    def test_remembered_card_is_not_sent_again(self):
+        api = Mock()
+        known = {self.record(self.card)}
+        ingest_cards.add_sources(
+            [self.record(self.card), self.record(self.second)], self.config, api,
+            inspect_candidate=lambda path, _: self.record(path), remembered=known,
+        )
+        api.assert_called_once_with('setSource', paths=[str(self.second)])
+        self.assertEqual(known, {self.record(self.card), self.record(self.second)})
+
+    def test_failed_add_does_not_mark_card_as_added(self):
+        api = Mock(side_effect=RuntimeError('OffShoot rejected setSource'))
+        known = set()
+        with self.assertRaises(RuntimeError):
+            ingest_cards.add_sources(
+                [self.record(self.card)], self.config, api,
+                inspect_candidate=lambda path, _: self.record(path), remembered=known,
+            )
+        self.assertEqual(known, set())
+
+    def test_fresh_process_reads_history_for_current_mount_and_offshoot_session(self):
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as directory:
+            state = Path(directory) / 'sources.json'
+            state.write_text(json.dumps({'session': 'pid start', 'records': [self.record(self.card)]}))
+            self.assertEqual(
+                ingest_cards.remembered_sources(state, 'pid start', {str(self.card)}),
+                {self.record(self.card)},
+            )
+            self.assertEqual(ingest_cards.remembered_sources(state, 'other', {str(self.card)}), set())
+            self.assertEqual(ingest_cards.remembered_sources(state, 'pid start', set()), set())
