@@ -2,11 +2,11 @@ property seenVolumes : {}
 property lastError : missing value
 
 on run
+    set seenVolumes to {}
     startIngest()
 end run
 
 on startIngest()
-    set seenVolumes to {}
     set lastError to missing value
     try
         do shell script launcherCommand
@@ -17,7 +17,6 @@ on startIngest()
 end startIngest
 
 on reopen
-    -- Reopening the app gives the operator another chance to select mounted cards.
     startIngest()
 end reopen
 
