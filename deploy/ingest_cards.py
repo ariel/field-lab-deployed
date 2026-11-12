@@ -45,17 +45,49 @@ def candidate(path, config, inspect=disk_info):
     return None
 
 
-def add_sources(records, config, api, inspect_candidate=candidate):
+def offshoot_session():
+    """Forget previous selections when OffShoot itself restarts."""
+    pids = subprocess.run(['/usr/bin/pgrep', '-x', 'OffShoot'],
+                          capture_output=True, text=True, timeout=3).stdout.split()
+    if len(pids) != 1:
+        return None
+    started = subprocess.run(['/bin/ps', '-p', pids[0], '-o', 'lstart='],
+                             capture_output=True, text=True, timeout=3).stdout.strip()
+    return f'{pids[0]} {started}' if started else None
+
+
+def remembered_sources(path, session, mounted):
+    try:
+        data = json.loads(path.read_text())
+    except (FileNotFoundError, ValueError):
+        return set()
+    if not session or not isinstance(data, dict) or data.get('session') != session:
+        return set()
+    records = data.get('records')
+    if not isinstance(records, list):
+        return set()
+    return {record for record in records
+            if isinstance(record, str) and record.split('\t', 1)[0] in mounted}
+
+
+def add_sources(records, config, api, inspect_candidate=candidate, remembered=None):
+    if remembered is None:
+        remembered = set()
     available = []
+    accepted = set()
     removed = []
     for record in dict.fromkeys(records):
+        if record in remembered:
+            continue
         path = Path(record.split('\t', 1)[0])
         if inspect_candidate(path, config) == record:
             available.append(str(path))
+            accepted.add(record)
         else:
             removed.append(str(path))
     if available:
         api('setSource', paths=available)
+        remembered.update(accepted)
     return removed
 
 
@@ -69,18 +101,43 @@ def main():
     with (home / 'deploy.lock').open('a+') as lock:
         fcntl.flock(lock, fcntl.LOCK_SH)
         config = json.loads((home / 'shared/config.json').read_text())
-        if args.action == 'list':
-            for path in sorted(VOLUMES.iterdir()):
-                if record := candidate(path, config):
-                    print(record)
-        else:
-            root = (home / 'current').resolve(strict=True)
-            if root.parent != home / 'releases':
-                raise ValueError('Invalid managed release')
-            sys.path.insert(0, str(root))
-            from setup_workflow import api
-            for path in add_sources(args.paths, config, api):
-                print(path)
+        root = (home / 'current').resolve(strict=True)
+        if root.parent != home / 'releases':
+            raise ValueError('Invalid managed release')
+        sys.path.insert(0, str(root))
+        from ditnotes.atomic import atomic_json
+
+        runtime = home / 'shared/runtime'
+        state = runtime / 'ingest-card-sources.json'
+        with (runtime / 'ingest-card-sources.lock').open('a+') as state_lock:
+            fcntl.flock(state_lock, fcntl.LOCK_EX)
+            paths = sorted(VOLUMES.iterdir())
+            session = offshoot_session()
+            remembered = remembered_sources(state, session, {str(path) for path in paths})
+            previous = set(remembered)
+            if args.action == 'list':
+                for path in paths:
+                    if (record := candidate(path, config)) and record not in remembered:
+                        print(record)
+            else:
+                if not session:
+                    raise RuntimeError('Open OffShoot before setting sources.')
+                from setup_workflow import api
+                unavailable = add_sources(args.paths, config, api, remembered=remembered)
+                if remembered != previous and offshoot_session() != session:
+                    raise RuntimeError('OffShoot restarted while setting sources. Review its Sources before trying again.')
+                for path in unavailable:
+                    print(path)
+            # Forget observed unmounts, and write new selections only after acknowledgment.
+            if session and (remembered != previous or state.exists()):
+                payload = {'session': session, 'records': sorted(remembered)}
+                try:
+                    unchanged = json.loads(state.read_text()) == payload
+                except (FileNotFoundError, ValueError):
+                    unchanged = False
+                if not unchanged:
+                    atomic_json(state, payload)
+
 
 
 if __name__ == '__main__':
